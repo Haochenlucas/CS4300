@@ -42,7 +42,7 @@ while 1
         if D(x,i)
             for j = 1:m
                 if D(y,j) && feval(P,x,i,y,j) 
-                    break;
+                    break; 
                 end
                 if j == m
                     D(x,i) = 0;

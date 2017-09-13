@@ -1,4 +1,4 @@
-function report = CS4300_A3_report()
+function report = CS4300_A2_report()
 
 trialnum = 2000;  % number of trials 
 max_steps = 1000;
