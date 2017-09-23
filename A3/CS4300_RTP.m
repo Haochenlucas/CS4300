@@ -29,10 +29,10 @@ for newclause = thm
 end
 new = [];
 while 1
-    for si = sentences
-        ci = si.clauses;
-        for sj = sentences(2:end)
-            cj = sj.clauses;
+    for i = 1:length(sentences)
+        ci = sentences(i).clauses;
+        for j = i:length(sentences)
+            cj = sentences(j).clauses;
         end
     end
 end
