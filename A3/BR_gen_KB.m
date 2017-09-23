@@ -36,6 +36,8 @@ function [KB,KBi,vars] = BR_gen_KB
 %       P22,...,P44,B11,B21,...,G11,...,S11,...,W44
 %
 
+vars = 1:80;
+
 % The 4 cells around a P have B
 
 % The 4 cells around a Wampus have S
