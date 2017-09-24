@@ -190,3 +190,18 @@ for i = 1:16
         end
     end
 end
+
+% If there is a pit, no W and G can be at that cell
+for i = 1:16
+    KB(end + 1).clauses(1) = "-P" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+    KB(end).clauses(end+1) = "-W" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+    
+    KB(end + 1).clauses(1) = "-P" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+    KB(end).clauses(end+1) = "-G" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+
+    KBi(end + 1).clauses(1) = -(i);
+    KBi(end).clauses(end+1) = -(i + 32);
+    
+    KBi(end + 1).clauses(1) = -(i);
+    KBi(end).clauses(end+1) = -(i + 64);
+end
