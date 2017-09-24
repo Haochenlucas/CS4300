@@ -42,6 +42,11 @@ loop do
 % The comments marked by %% are made on pieces of codes to mark their
 % counter parts in pseudo code.
 
+% sort all clauses in sentences
+for sentence = sentences
+    sentence.clauses = unique(sentence.clauses);
+end
+
 %% clauses <- the set of clauses in the CNF representation of KB & ¬alpha
 for newclause = thm(1).clauses
     sentences(end+1).clauses = -newclause;
@@ -56,40 +61,38 @@ while 1
     %% for each pair of clauses Ci, Cj in clauses do
     for i = 1:length(sentences)
         ci = sentences(i).clauses;
-        for j = i:length(sentences)
+        for j = i+1:length(sentences)
             cj = sentences(j).clauses;
             
             %% resolvents <- PL-RESOLVE(Ci, Cj)
+            % resolvent count
+            rc = 0;
             % start with one clause (Ci).
             resolvent = ci;
-            % flag of if a resolvent is raised.
-            isnew = 0;
-            for v = cj
+            for k = 1:length(cj)
+                v = cj(k);
                 % find the index the complement of an element of Cj in Ci.
-                k = find(resolvent==-v);
-                if ~isempty(k)
-                    % the is such element in Ci, a resolvent has been
-                    % raised.
-                    isnew = 1;
+                l = find(resolvent==-v, 1);
+                if ~isempty(l)
+                    rc = rc + 1;
                     % remove that element from the resolvent.
-                    resolvent(k) = [];
-                else
-                    % there is no such element, put the element from Cj
-                    % into resolvent.
-                    resolvent = [resolvent,v];
+                    resolvent(l) = [];
+                    resolvent = [resolvent, cj(1:k-1), cj(k+1:end)];            
+                    %% if resolvents contains the empty clause then return true
+                    if isempty(resolvent)
+                        Sip = resolvent;
+                        return;
+                    end
+                    % remove duplicates and sort the resolvent.
+                    resolvents(rc).clauses = unique(resolvent);
+                    resolvent = ci;
                 end
-            end
-            % remove duplicates and sort the resolvent.
-            resolvent = unique(resolvent);
-            
-            %% if resolvents contains the empty clause then return true
-            if isempty(resolvent)
-                Sip = resolvent;
-                return;
             end
             
             %% new <- new U resolvents
-            if isnew
+            for k = 1:rc
+                resolvent = resolvents(rc).clauses;
+                isnew = 1;
                 % the clause is a resolvent, check if it is in the new
                 % list, if not, add it into new.
                 for other = new
