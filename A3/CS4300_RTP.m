@@ -24,78 +24,132 @@ function Sip = CS4300_RTP(sentences,thm,vars)
 % Fall 2017
 %
 
-% this function implements the algorithm from p. 255 of the book
+% This function implements the algorithm from p. 255 of the book
 %{
 function PL-RESOLUTION(KB,?) returns true or false
 inputs: KB, the knowledge base, a sentence in propositional logic
-        ?, the query, a sentence in propositional logic
-clauses ? the set of clauses in the CNF representation of KB ? ¬?
-new ?{}
+        alpha, the query, a sentence in propositional logic
+clauses <- the set of clauses in the CNF representation of KB & ¬alpha
+new <- {}
 loop do
     for each pair of clauses Ci, Cj in clauses do
-        resolvents ? PL-RESOLVE(Ci, Cj )
+        resolvents <- PL-RESOLVE(Ci, Cj)
         if resolvents contains the empty clause then return true
-        new ? new ? resolvents
-    if new ? clauses then return false
-    clauses ? clauses ?new
+        new <- new U resolvents
+    if new is subset of clauses then return false
+    clauses <- clauses U new
 %}
+% The comments marked by %% are made on pieces of codes to mark their
+% counter parts in pseudo code.
 
-% clauses ? the set of clauses in the CNF representation of KB ? ¬?
-for newclause = thm
-    sentences(end+1) = -newclause;
+%% clauses <- the set of clauses in the CNF representation of KB & ¬alpha
+for newclause = thm(1).clauses
+    sentences(end+1).clauses = -newclause;
 end
 
-% new ?{}
+%% new <- {}
 new = [];
 
-% loop do
+%% loop do
 while 1
     
-    %for each pair of clauses Ci, Cj in clauses do
+    %% for each pair of clauses Ci, Cj in clauses do
     for i = 1:length(sentences)
         ci = sentences(i).clauses;
         for j = i:length(sentences)
             cj = sentences(j).clauses;
             
-            % resolvents ? PL-RESOLVE(Ci, Cj)
-            resolvents = ci;
+            %% resolvents <- PL-RESOLVE(Ci, Cj)
+            % start with one clause (Ci).
+            resolvent = ci;
+            % flag of if a resolvent is raised.
             isnew = 0;
             for v = cj
-                k = find(resolvents==-v)
+                % find the index the complement of an element of Cj in Ci.
+                k = find(resolvent==-v);
                 if ~isempty(k)
+                    % the is such element in Ci, a resolvent has been
+                    % raised.
                     isnew = 1;
-                    resolvents(k) = [];
+                    % remove that element from the resolvent.
+                    resolvent(k) = [];
                 else
-                    resolvents = [resolvents,v];
+                    % there is no such element, put the element from Cj
+                    % into resolvent.
+                    resolvent = [resolvent,v];
                 end
             end
-            resolvents = unique(resolvents);
+            % remove duplicates and sort the resolvent.
+            resolvent = unique(resolvent);
             
-            % if resolvents contains the empty clause then return true
-            if isempty(resolvents)
-                Sip = resolvents;
+            %% if resolvents contains the empty clause then return true
+            if isempty(resolvent)
+                Sip = resolvent;
                 return;
             end
             
-            % new ? new ? resolvents
+            %% new <- new U resolvents
             if isnew
+                % the clause is a resolvent, check if it is in the new
+                % list, if not, add it into new.
                 for other = new
+                    % oc means other clauses
                     oc = other.clauses;
-                    if length(oc) == length(resolvents)
-                        if all(oc == resolvents)
+                    % if the length is different, they must be different.
+                    if length(oc) == length(resolvent)
+                        % compare if all the elements in oc and resolvent 
+                        % are the same. 
+                        % they are sorted (line 83) so it's fast.
+                        if all(oc == resolvent)
+                            % its already in the new list, so its not
+                            % actually new.
                             isnew = 0;
                             break;
                         end
                     end
                 end
+                % the loop was not broken the resolvent is new.
                 if isnew
-                    new(end+1).clauses = resolvents;
+                    new(end+1).clauses = resolvent;
                 end
             end            
         end
     end
-    % if new ? clauses then return false
+    %% if new is subset of clauses then return false
+    % this is done by comparing all clauses in new to all clauses in
+    % sentences. If a clause in new is already in sentences, it will be
+    % removed from a copy of new. If the copy is empty at the end, new is
+    % a subset of sentences.
+    
+    % the indexes of the clauses in new that has to be removed.
+    oldIndexes = [];
     for i = 1:length(new)
+        newclauses = new(i).clauses;
+        for sentence = sentences
+            oldclauses = sentence.clauses;
+            if length(newclauses) == length(oldclauses)
+                if all(newclauses == oldclauses)
+                    % the clause in new is in sentences.
+                    % add the indexes in descending order so the will be
+                    % removed correctly.
+                    oldIndexes = [i, oldIndexes];
+                    break;
+                end
+            end            
+        end
     end
-    % clauses ? clauses ? new
+    % remove duplicated clauses from the copy.
+    copynew = new;
+    for i = oldIndexes
+        copynew(i) = [];
+    end
+    if isempty(copynew)
+        % new is subset of clauses, return the resolvents for checking.
+        Sip = sentences;
+        return;
+    end
+    
+    %% clauses <- clauses U new
+    % duplicated clauses are removed from the copy.
+    sentences = [sentences,copynew];
 end
