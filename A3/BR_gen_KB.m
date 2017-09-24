@@ -44,15 +44,15 @@ for i = 1:16
     cur_i = index;
     
     % There must exist a -Bxy ^ ... no matter what.
-    KB(index).clauses(end+1) = "-B" + (mod(i, 4)) + (floor(i/4) + 1);
+    KB(index).clauses(end+1) = "-B" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
     KBi(index).clauses(end+1) = -(16 + i);
     
     % Cells not on the left edge
     if mod(i, 4) == 1
         cur_i = index + 1;
-        KB(index).clauses(end+1) =  "P" + (mod(i, 4) + 1) + (floor(i/4) + 1);
-        KB(cur_i).clauses(end+1) = "-P" + (mod(i, 4) + 1) + (floor(i/4) + 1);
-        KB(cur_i).clauses(end+1) =  "B" + (mod(i, 4)) + (floor(i/4) + 1);
+        KB(index).clauses(end+1) =  "P" + (mod(i-1, 4)+1 + 1) + (floor((i-1)/4)+1);
+        KB(cur_i).clauses(end+1) = "-P" + (mod(i-1, 4)+1 + 1) + (floor((i-1)/4)+1);
+        KB(cur_i).clauses(end+1) =  "B" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
         
         KBi(index).clauses(end+1) = i + 1;
         KBi(cur_i).clauses(end+1) = -(i + 1);
@@ -62,9 +62,9 @@ for i = 1:16
     % Cells not on the right edge
     if mod(i, 4) ~= 0
         cur_i = index + 1;
-        KB(index).clauses(end+1) =  "P" + (mod(i, 4) - 1) + (floor(i/4) + 1);
-        KB(cur_i).clauses(end+1) = "-P" + (mod(i, 4) - 1) + (floor(i/4) + 1);
-        KB(cur_i).clauses(end+1) =  "B" + (mod(i, 4)) + (floor(i/4) + 1);
+        KB(index).clauses(end+1) =  "P" + (mod(i-1, 4)+1 - 1) + (floor((i-1)/4)+1);
+        KB(cur_i).clauses(end+1) = "-P" + (mod(i-1, 4)+1 - 1) + (floor((i-1)/4)+1);
+        KB(cur_i).clauses(end+1) =  "B" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
         
         KBi(index).clauses(end+1) = i - 1;
         KBi(cur_i).clauses(end+1) = -(i - 1);
@@ -74,9 +74,9 @@ for i = 1:16
     % Cells not on the bottom edge
     if i > 4
         cur_i = index + 1;
-        KB(index).clauses(end+1) =  "P" + (mod(i, 4)) + (floor(i/4));
-        KB(cur_i).clauses(end+1) = "-P" + (mod(i, 4)) + (floor(i/4));
-        KB(cur_i).clauses(end+1) =  "B" + (mod(i, 4)) + (floor(i/4) + 1);
+        KB(index).clauses(end+1) =  "P" + (mod(i-1, 4)+1) + (floor((i-1)/4));
+        KB(cur_i).clauses(end+1) = "-P" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+        KB(cur_i).clauses(end+1) =  "B" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
         
         KBi(index).clauses(end+1) = i - 4;
         KBi(cur_i).clauses(end+1) = -(i - 4);
@@ -86,9 +86,9 @@ for i = 1:16
     % Cells not on the top edge
     if i < 13
         cur_i = index + 1;
-        KB(index).clauses(end+1) =  "P" + (mod(i, 4)) + (floor(i/4) + 2);
-        KB(cur_i).clauses(end+1) = "-P" + (mod(i, 4)) + (floor(i/4) + 2);
-        KB(cur_i).clauses(end+1) =  "B" + (mod(i, 4)) + (floor(i/4) + 1);
+        KB(index).clauses(end+1) =  "P" + (mod(i-1, 4)+1) + (floor((i-1)/4)+2);
+        KB(cur_i).clauses(end+1) = "-P" + (mod(i-1, 4)+1) + (floor((i-1)/4)+2);
+        KB(cur_i).clauses(end+1) =  "B" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
         
         KBi(index).clauses(end+1) = i + 4;
         KBi(cur_i).clauses(end+1) = -(i + 4);
@@ -102,15 +102,15 @@ for i = 1:16
     cur_i = index;
     
     % There must exist a -Sxy ^ ... no matter what.
-    KB(index).clauses(end+1) = "-S" + (mod(i, 4)) + (floor(i/4) + 1);
+    KB(index).clauses(end+1) = "-S" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
     KBi(index).clauses(end+1) = -(16 + i + 32);
     
     % Cells not on the left edge
     if mod(i, 4) == 1
         cur_i = index + 1;
-        KB(index).clauses(end+1) =  "W" + (mod(i, 4) + 1) + (floor(i/4) + 1);
-        KB(cur_i).clauses(end+1) = "-W" + (mod(i, 4) + 1) + (floor(i/4) + 1);
-        KB(cur_i).clauses(end+1) =  "S" + (mod(i, 4)) + (floor(i/4) + 1);
+        KB(index).clauses(end+1) =  "W" + (mod(i-1, 4)+1 + 1) + (floor((i-1)/4)+1);
+        KB(cur_i).clauses(end+1) = "-W" + (mod(i-1, 4)+1 + 1) + (floor((i-1)/4)+1);
+        KB(cur_i).clauses(end+1) =  "S" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
         
         KBi(index).clauses(end+1) = i + 1 + 64;
         KBi(cur_i).clauses(end+1) = -(i + 1 + 64);
@@ -120,9 +120,9 @@ for i = 1:16
     % Cells not on the right edge
     if mod(i, 4) ~= 0
         cur_i = index + 1;
-        KB(index).clauses(end+1) =  "W" + (mod(i, 4) - 1) + (floor(i/4) + 1);
-        KB(cur_i).clauses(end+1) = "-W" + (mod(i, 4) - 1) + (floor(i/4) + 1);
-        KB(cur_i).clauses(end+1) =  "S" + (mod(i, 4)) + (floor(i/4) + 1);
+        KB(index).clauses(end+1) =  "W" + (mod(i-1, 4)+1 - 1) + (floor((i-1)/4)+1);
+        KB(cur_i).clauses(end+1) = "-W" + (mod(i-1, 4)+1 - 1) + (floor((i-1)/4)+1);
+        KB(cur_i).clauses(end+1) =  "S" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
         
         KBi(index).clauses(end+1) = i - 1 + 64;
         KBi(cur_i).clauses(end+1) = -(i - 1 + 64);
@@ -132,9 +132,9 @@ for i = 1:16
     % Cells not on the bottom edge
     if i > 4
         cur_i = index + 1;
-        KB(index).clauses(end+1) =  "w" + (mod(i, 4)) + (floor(i/4));
-        KB(cur_i).clauses(end+1) = "-W" + (mod(i, 4)) + (floor(i/4));
-        KB(cur_i).clauses(end+1) =  "S" + (mod(i, 4)) + (floor(i/4) + 1);
+        KB(index).clauses(end+1) =  "w" + (mod(i-1, 4)+1) + (floor((i-1)/4));
+        KB(cur_i).clauses(end+1) = "-W" + (mod(i-1, 4)+1) + (floor((i-1)/4));
+        KB(cur_i).clauses(end+1) =  "S" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
         
         KBi(index).clauses(end+1) = i - 4 + 64;
         KBi(cur_i).clauses(end+1) = -(i - 4 + 64);
@@ -144,9 +144,9 @@ for i = 1:16
     % Cells not on the top edge
     if i < 13
         cur_i = index + 1;
-        KB(index).clauses(end+1) =  "W" + (mod(i, 4)) + (floor(i/4) + 2);
-        KB(cur_i).clauses(end+1) = "-W" + (mod(i, 4)) + (floor(i/4) + 2);
-        KB(cur_i).clauses(end+1) =  "S" + (mod(i, 4)) + (floor(i/4) + 1);
+        KB(index).clauses(end+1) =  "W" + (mod(i-1, 4)+1) + (floor((i-1)/4)+2);
+        KB(cur_i).clauses(end+1) = "-W" + (mod(i-1, 4)+1) + (floor((i-1)/4) + 2);
+        KB(cur_i).clauses(end+1) =  "S" + (mod(i-1, 4)+1) + (floor((i-1)/4) + 1);
         
         KBi(index).clauses(end+1) = i + 4 + 64;
         KBi(cur_i).clauses(end+1) = -(i + 4 + 64);
@@ -156,14 +156,30 @@ end
 
 % There is at most 1 Wampusfor i = 1:16
 for i = 1:16
-    KB(end + 1).clauses(end+1) = "-W" + (mod(i, 4)) + (floor(i/4) + 2);
-    KB(end).clauses(end+1) =  "-W" + (mod(i, 4)) + (floor(i/4) + 1);
+    for j = 1:16
+            KB(end + 1).clauses(end+1) = "-W" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+            KBi(end + 1).clauses(end+1) = -(i + 64);
+        if i ~= j
+            KB(end).clauses(end+1) =  "-W" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
 
-    KBi(end + 1).clauses(end+1) = -(i + 64);
-    KBi(end).clauses(end+1) = -(i + 64);
+            KBi(end).clauses(end+1) = -(j + 64);
+        end
+    end
 end
 
 % There is exactly 1 gold
+index = length(KB) + 1;
 for i = 1:16
+    KB(index).clauses(end+1) = "G" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+    KBi(index).clauses(end+1) = (i + 32);
     
+    for j = 1:16
+            KB(end + 1).clauses(end+1) = "-G" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+            KBi(end + 1).clauses(end+1) = -(i + 32);
+        if i ~= j
+            KB(end).clauses(end+1) =  "-G" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+
+            KBi(end).clauses(end+1) = -(j + 32);
+        end
+    end
 end
