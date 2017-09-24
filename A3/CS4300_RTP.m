@@ -55,44 +55,59 @@ end
 %% new <- {}
 new = [];
 
+changedVars = abs(thm(1).clauses);
+
 %% loop do
 while 1
     
     %% for each pair of clauses Ci, Cj in clauses do
     for i = 1:length(sentences)
         ci = sentences(i).clauses;
+        if ~any(ismember(changedVars,abs(ci)))
+            continue;
+        end
         for j = i+1:length(sentences)
             cj = sentences(j).clauses;
+            if ~any(ismember(changedVars,abs(cj)))
+                continue;
+            end
             
             %% resolvents <- PL-RESOLVE(Ci, Cj)
-            % resolvent count
-            rc = 0;
             % start with one clause (Ci).
             resolvent = ci;
-            for k = 1:length(cj)
-                v = cj(k);
+            % flag of if a resolvent is raised.
+            isnew = 0;
+            for v = cj
                 % find the index the complement of an element of Cj in Ci.
-                l = find(resolvent==-v, 1);
-                if ~isempty(l)
-                    rc = rc + 1;
-                    % remove that element from the resolvent.
-                    resolvent(l) = [];
-                    resolvent = [resolvent, cj(1:k-1), cj(k+1:end)];            
-                    %% if resolvents contains the empty clause then return true
-                    if isempty(resolvent)
-                        Sip = resolvent;
-                        return;
+                k = find(resolvent==-v);
+                if ~isempty(k)
+                    % the is such element in Ci, a resolvent has been
+                    % raised.
+                    if isnew
+                        isnew = 0;
+                        break;
                     end
-                    % remove duplicates and sort the resolvent.
-                    resolvents(rc).clauses = unique(resolvent);
-                    resolvent = ci;
+                    isnew = 1;
+                    % remove that element from the resolvent.
+                    resolvent(k) = [];
+                    changedVars = unique([changedVars, abs(v)]);
+                else
+                    % there is no such element, put the element from Cj
+                    % into resolvent.
+                    resolvent = [resolvent,v];
                 end
+            end
+            % remove duplicates and sort the resolvent.
+            resolvent = unique(resolvent);
+            
+            %% if resolvents contains the empty clause then return true
+            if isempty(resolvent)
+                Sip = resolvent;
+                return;
             end
             
             %% new <- new U resolvents
-            for k = 1:rc
-                resolvent = resolvents(rc).clauses;
-                isnew = 1;
+            if isnew
                 % the clause is a resolvent, check if it is in the new
                 % list, if not, add it into new.
                 for other = new
@@ -114,6 +129,7 @@ while 1
                 % the loop was not broken the resolvent is new.
                 if isnew
                     new(end+1).clauses = resolvent;
+                    changedVars = unique([changedVars, abs(resolvent)]);
                 end
             end            
         end
