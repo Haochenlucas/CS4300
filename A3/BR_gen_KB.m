@@ -157,8 +157,17 @@ for i = 1:16
 end
 
 % There is at most 1 Wampusfor i = 1:16
+index = length(KB) + 1;
 for i = 1:16
-    for j = 1:16
+    if i == 1
+        KB(index).clauses(1) = "W" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+        KBi(index).clauses(1) = (i + 64);
+    else
+        KB(index).clauses(end+1) = "W" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+        KBi(index).clauses(end+1) = (i + 64);
+    end
+    
+    for j = i:16
         if i ~= j
             KB(end + 1).clauses(1) = "-W" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
             KB(end).clauses(end+1) =  "-W" + (mod(j-1, 4)+1) + (floor((j-1)/4)+1);
@@ -180,7 +189,7 @@ for i = 1:16
         KBi(index).clauses(end+1) = (i + 32);
     end
     
-    for j = 1:16
+    for j = i:16
         if i ~= j
             KB(end+1).clauses(1) =  "-G" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
             KB(end).clauses(end+1) = "-G" + (mod(j-1, 4)+1) + (floor((j-1)/4)+1);
