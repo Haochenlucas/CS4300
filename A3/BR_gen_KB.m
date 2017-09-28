@@ -45,7 +45,7 @@ for i = 1:16
     index = length(KB) + 1;
     cur_i = index;
     
-    % There must exist a -Bxy ^ ... no matter what.
+    % There must exist a -Bxy or ... no matter what.
     KB(index).clauses(1) = "-B" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
     KBi(index).clauses(1) = -(16 + i);
     
@@ -103,7 +103,7 @@ for i = 1:16
     index = length(KB) + 1;
     cur_i = index;
     
-    % There must exist a -Sxy ^ ... no matter what.
+    % There must exist a -Sxy or ... no matter what.
     KB(index).clauses(1) = "-S" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
     KBi(index).clauses(1) = -(16 + i + 32);
     
