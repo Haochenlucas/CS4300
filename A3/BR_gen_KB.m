@@ -38,7 +38,28 @@ function [KB,KBi,vars] = BR_gen_KB
 
 KB = [];
 KBi = [];
-vars = 1:80;
+vars = cell(80, 1);
+
+% Build the vars array. P: 1~16; B: 17~32; G: 33~ 48; S: 49~64; W: 65~80
+for a = 1:5
+    label = "";
+    switch a
+    case 1
+        label = "P";
+    case 2
+        label = "B";
+    case 3
+        label = "G";
+    case 4
+        label = "S";
+    case 5
+        label = "W";
+    end
+    
+    for i = 1:16
+        vars{16 * (a - 1) + i} = label + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+    end
+end
 
 % The 4 cells around a P have B
 for i = 1:16
