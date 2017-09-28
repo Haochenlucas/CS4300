@@ -67,8 +67,10 @@ newNotChecked = 1;
 while 1
     
     %% for each pair of clauses Ci, Cj in clauses do
+    % To compare every pair, all clauses need to be Ci.
     for i = 1:length(sentences)
         ci = sentences(i).clauses;
+        % The clauses before notChecked has been checked, skip them.
         for j = notChecked:length(sentences)
             cj = sentences(j).clauses;
             %% resolvents <- PL-RESOLVE(Ci, Cj)
@@ -83,6 +85,8 @@ while 1
                     % the is such element in Ci, a resolvent has been
                     % raised.
                     if isnew
+                        % there are two pairs of complements, discard this 
+                        % resolvent.
                         isnew = 0;
                         break;
                     end
@@ -137,10 +141,13 @@ while 1
     % removed from a copy of new. If the copy is empty at the end, new is
     % a subset of sentences.
     
-    % the indexes of the clauses in new that has to be removed.
+    % the indexes of the clauses in new that has to be removed due to
+    % being a duplicate.
     oldIndexes = [];
-    for i = newNotChecked:length(new)
-        newClauses = new(i).clauses;
+    % the clauses before newNotChecked are all already checked
+    copyNew = new(newNotChecked+1:end);
+    for i = 1:length(copyNew)
+        newClauses = copyNew(i).clauses;
         for sentence = sentences
             oldclauses = sentence.clauses;
             if length(newClauses) == length(oldclauses)
@@ -154,10 +161,8 @@ while 1
             end            
         end
     end
-    newNotChecked = length(new);
         
     % remove duplicated clauses from the copy.
-    copyNew = new;
     for i = oldIndexes
         copyNew(i) = [];
     end
@@ -166,6 +171,7 @@ while 1
         Sip = sentences;
         return;
     end
+    newNotChecked = length(new);
     notChecked = length(sentences) + 1;
     %% clauses <- clauses U new
     % duplicated clauses are removed from the copy.
