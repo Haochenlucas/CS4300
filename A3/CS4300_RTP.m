@@ -42,6 +42,11 @@ loop do
 % The comments marked by %% are made on pieces of codes to mark their
 % counter parts in pseudo code.
 
+% sort all clauses in sentences
+for sentence = sentences
+    sentence.clauses = unique(sentence.clauses);
+end
+
 %% clauses <- the set of clauses in the CNF representation of KB & ¬alpha
 for newclause = thm(1).clauses
     sentences(end+1).clauses = -newclause;
@@ -50,15 +55,19 @@ end
 %% new <- {}
 new = [];
 
+% index of the clauses in sentences that have not been used.
+notChecked = 2;
+% index of the clauses in new that have not been used.
+newNotChecked = 1;
+
 %% loop do
 while 1
     
     %% for each pair of clauses Ci, Cj in clauses do
     for i = 1:length(sentences)
         ci = sentences(i).clauses;
-        for j = i:length(sentences)
+        for j = notChecked:length(sentences)
             cj = sentences(j).clauses;
-            
             %% resolvents <- PL-RESOLVE(Ci, Cj)
             % start with one clause (Ci).
             resolvent = ci;
@@ -70,6 +79,10 @@ while 1
                 if ~isempty(k)
                     % the is such element in Ci, a resolvent has been
                     % raised.
+                    if isnew
+                        isnew = 0;
+                        break;
+                    end
                     isnew = 1;
                     % remove that element from the resolvent.
                     resolvent(k) = [];
@@ -99,7 +112,7 @@ while 1
                     if length(oc) == length(resolvent)
                         % compare if all the elements in oc and resolvent 
                         % are the same. 
-                        % they are sorted (line 83) so it's fast.
+                        % they are sorted so it's fast.
                         if all(oc == resolvent)
                             % its already in the new list, so its not
                             % actually new.
@@ -123,12 +136,12 @@ while 1
     
     % the indexes of the clauses in new that has to be removed.
     oldIndexes = [];
-    for i = 1:length(new)
-        newclauses = new(i).clauses;
+    for i = newNotChecked:length(new)
+        newClauses = new(i).clauses;
         for sentence = sentences
             oldclauses = sentence.clauses;
-            if length(newclauses) == length(oldclauses)
-                if all(newclauses == oldclauses)
+            if length(newClauses) == length(oldclauses)
+                if all(newClauses == oldclauses)
                     % the clause in new is in sentences.
                     % add the indexes in descending order so the will be
                     % removed correctly.
@@ -138,18 +151,20 @@ while 1
             end            
         end
     end
+    newNotChecked = length(new);
+        
     % remove duplicated clauses from the copy.
-    copynew = new;
+    copyNew = new;
     for i = oldIndexes
-        copynew(i) = [];
+        copyNew(i) = [];
     end
-    if isempty(copynew)
+    if isempty(copyNew)
         % new is subset of clauses, return the resolvents for checking.
         Sip = sentences;
         return;
     end
-    
+    notChecked = length(sentences) + 1;
     %% clauses <- clauses U new
     % duplicated clauses are removed from the copy.
-    sentences = [sentences,copynew];
+    sentences = [sentences,copyNew];
 end
