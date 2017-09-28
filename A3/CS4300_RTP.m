@@ -26,7 +26,7 @@ function Sip = CS4300_RTP(sentences,thm,vars)
 
 % This function implements the algorithm from p. 255 of the book
 %{
-function PL-RESOLUTION(KB,?) returns true or false
+function PL-RESOLUTION(KB,alpha) returns true or false
 inputs: KB, the knowledge base, a sentence in propositional logic
         alpha, the query, a sentence in propositional logic
 clauses <- the set of clauses in the CNF representation of KB & ¬alpha
@@ -47,10 +47,13 @@ for sentence = sentences
     sentence.clauses = unique(sentence.clauses);
 end
 
+l = length(sentences);
 %% clauses <- the set of clauses in the CNF representation of KB & ¬alpha
 for newclause = thm(1).clauses
     sentences(end+1).clauses = -newclause;
 end
+% put ¬alpha clauses in the front of the list for faster checking.
+sentences = [sentences(l+1:end), sentences(1:l)];
 
 %% new <- {}
 new = [];
