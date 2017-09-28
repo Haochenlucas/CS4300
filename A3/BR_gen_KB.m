@@ -98,7 +98,7 @@ for i = 1:16
     if i > 4
         cur_i = cur_i + 1;
         KB(index).clauses(end+1) =  "P" + (mod(i-1, 4)+1) + (floor((i-1)/4));
-        KB(cur_i).clauses(1) = "-P" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+        KB(cur_i).clauses(1) = "-P" + (mod(i-1, 4)+1) + (floor((i-1)/4));
         KB(cur_i).clauses(end+1) =  "B" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
         
         KBi(index).clauses(end+1) = i - 4;
