@@ -5,7 +5,6 @@ function KB_out = CS4300_Tell(KB,sentence)
 % (k).clauses (1xp vector): disjunction clause
 % sentence (KB struct): query theorem (CNF)
 % (k).clauses (1xq vector): disjunction
-3
 % On output:
 % KB_out (KB struct): revised KB
 % Call:
@@ -15,3 +14,4 @@ function KB_out = CS4300_Tell(KB,sentence)
 % UU
 % Fall 2017
 %
+
