@@ -41,6 +41,6 @@ else
 end
 
 if percept(4)
-    % Delete all Wampus
+    % Delete all Wampus - 81 ... -
 end
     

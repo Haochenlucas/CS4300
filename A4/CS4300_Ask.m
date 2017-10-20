@@ -17,3 +17,13 @@ function b = CS4300_Ask(KB,sentence)
 % UU
 % Fall 2017
 %
+
+vars = cell(80, 1);
+
+sip = CS4300_RTP(KB, sentence vars);
+
+if isempty(sip)
+    b = 1;
+else
+    b = 0;
+end
