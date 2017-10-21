@@ -88,7 +88,9 @@ end
 % See if still have arrow
 if isempty(plan)
     if have_arrow && W_pos(:,1) ~= -1
-        valid_pos = [W_pos];
+        % Add all possible safe position that can make a shoot
+        valid_pos = [];
+        valid_pos(1) = W_pos;
         
         for celly = 1:length(safe(:,1))
             if celly ~= W_pos(1,:) && safe(W_pos(:,1), celly) == 1
@@ -101,6 +103,8 @@ if isempty(plan)
                 valid_pos(end+1) = [cellx, W_pos(1,:)];
             end
         end
+        
+        % Delete the position of the Wampus
         valid_pos = valid_pos(2:end);
         
         closest = [];
@@ -109,9 +113,9 @@ if isempty(plan)
             closest_dis = 99;
             for i = 1:length(valid_pos(:,1))
                 temp = [valid_pos(i),4-rows(i)+1];
-                if CS4300_A_star_Man(current_pos, temp) < closest_dis
+                if CS4300_A_star_Man([agent.x,agent.y], temp) < closest_dis
                     closest = temp;
-                    closest_dis = CS4300_A_star_Man(current_pos, closest);
+                    closest_dis = CS4300_A_star_Man([agent.x,agent.y], closest);
                 end
             end
         end
@@ -120,8 +124,8 @@ if isempty(plan)
         if ~isempty(closest)
             [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
                 [closest(1),closest(2),0],'CS4300_A_star_Man');
-            % TODO: TRUN_SEQUENCE
-            plan = [so(2:end,end), TRUN_SEQUENCE, SHOOT];
+            % Flag to show need turn sequence
+            plan = [so(2:end,end), [-1,-1,-1,-1], CLIMB];
         end
     end
 end
@@ -147,6 +151,16 @@ end
 % Execute the action from the plan one by one
 action = plan(1);
 plan = plan(2:end);
+
+
+% The next action should be a trun sequence
+% Since the previous action will always be FORWARE, use the current dir...
+%  as the direction that agent reach the shooting square
+if plan(2) == -1        % If the next action is [-1, -1, -1, -1]
+    trun_seq = CS4300_Redirect_to_W(closest, W_pos,...
+        [agent.x,agent.y,agent.dir]);
+    plan(1) = trun_seq;
+end
 
 if action==FORWARD
     [x_new,y_new] = CS4300_move(agent.x,agent.y,agent.dir);
