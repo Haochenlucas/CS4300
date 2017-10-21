@@ -17,6 +17,10 @@ function KB_out = CS4300_Tell(KB,sentence)
 
 len_clause = length(sentence);
 for i = 1:len_clause
+    if sentence(4) == 81
+        % scream
+    end
+    
     KB(end + 1).clauses(1) = sentence(i);
 end
 

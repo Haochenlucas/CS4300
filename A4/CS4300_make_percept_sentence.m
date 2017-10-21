@@ -48,10 +48,9 @@ else
     sentence(3) = -glitter;
 end
 
-% Don't know if we need this
-% scream = ? + x + 4 * (y - 1);
-% if percept(4)
-%     sentence(4) = scream;
-% else
-%     sentence(4) = -scream;
-% end
+scream = 81;
+if percept(4)
+    sentence(4) = 81;
+else
+    sentence(4) = -81;
+end
