@@ -19,28 +19,39 @@ function sentence = CS4300_make_percept_sentence(percept,x,y)
 % UU
 % Fall 2017
 %
+% Pit: 1-16
+% Glitter: 17-32
+% Breeze: 33-48
+% Stence: 49-64
+% Wempus 65-80
 
 sentence = cell(5, 1);
 
+stench = 48 + x + 4 * (y - 1);
 if percept(1)
-    sentence(1) = "S" + x + y;
+    sentence(1) = stench;
 else
-    sentence(1) = "-S" + x + y;
+    sentence(1) = -stench;
 end
 
+breeze = 32 + x + 4 * (y - 1);
 if percept(2)
-    sentence(2) = "B" + x + y;
+    sentence(2) = breeze;
 else
-    sentence(2) = "-B" + x + y;
+    sentence(2) = -breeze;
 end
 
+glitter = 16 + x + 4 * (y - 1);
 if percept(3)
-    sentence(3) = "G" + x + y;
+    sentence(3) = glitter;
 else
-    sentence(3) = "-G" + x + y;
+    sentence(3) = -glitter;
 end
 
-if percept(4)
-    % Delete all Wampus - 81 ... -
-end
-    
+% Don't know if we need this
+% scream = ? + x + 4 * (y - 1);
+% if percept(4)
+%     sentence(4) = scream;
+% else
+%     sentence(4) = -scream;
+% end

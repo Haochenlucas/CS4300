@@ -20,7 +20,7 @@ function b = CS4300_Ask(KB,sentence)
 
 vars = cell(80, 1);
 
-sip = CS4300_RTP(KB, sentence vars);
+sip = CS4300_RTP(KB, sentence, vars);
 
 if isempty(sip)
     b = 1;
