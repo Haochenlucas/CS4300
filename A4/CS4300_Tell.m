@@ -15,3 +15,9 @@ function KB_out = CS4300_Tell(KB,sentence)
 % Fall 2017
 %
 
+len_clause = length(sentence);
+for i = 1:len_clause
+    KB(end + 1).clauses(1) = sentence(i);
+end
+
+KB_out = KB;

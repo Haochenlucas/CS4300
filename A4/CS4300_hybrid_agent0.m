@@ -52,6 +52,10 @@ GRAB = 4;
 SHOOT = 5;
 CLIMB = 6;
 
+% Update KB
+sentence = CS4300_make_percept_sentence(percept,agent.x,agent.y);
+KB = CS4300_Tell(KB, sentence);
+
 % informal logic rules
 neighbors = CS4300_Wumpus_neighbors(agent.x,agent.y);
 num_neighbors = length(neighbors(:,1));
@@ -118,9 +122,6 @@ if isempty(plan)
     plan = [so(2:end,end)];
 end
 
-% Update KB
-sentence = CS4300_make_percept_sentence(percept,agent.x,agent.y);
-CS4300_Tell(KB, sentence);
 
 % Execute the action from the plan one by one
 action = plan(1);
