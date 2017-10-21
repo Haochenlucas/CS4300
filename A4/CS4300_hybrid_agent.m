@@ -12,15 +12,11 @@ function action = CS4300_hybrid_agent(percept)
 % Fall 2017
 %
 
-persistent plan board agent safe visited have_gold pits Wumpus
+persistent plan board agent safe visited have_arrow W_pos
 
 if isempty(board)
     plan = [];
     board = [-1,-1,-1,-1; -1,-1,-1,-1;-1,-1,-1,-1;0,-1,-1,-1];
-    pits = -ones(4,4);
-    pits(4,1) = 0;
-    Wumpus = -ones(4,4);
-    Wumpus(4,1) = 0;
     agent.x = 1;
     agent.y = 1;
     agent.dir = 0;
@@ -28,7 +24,9 @@ if isempty(board)
     visited(4,1) = 1;
     safe = -ones(4,4);
     safe(4,1) = 1;
-    have_gold = 0;
+    have_arrow = 1;
+    % Wampus position unknown
+    W_pos = [-1,-1];
 end
 
 FORWARD = 1;
@@ -46,19 +44,31 @@ KB = CS4300_Tell(KB, sentence);
 for celly = 1:length(safe(:,1))
     for cellx = 1:length(safe(1,:))
         if safe(cellx,celly) == -1
-            check_pit =  CS4300_Ask(KB, -(0 + cellx + 4 * (celly - 1)));
-            check_W = CS4300_Ask(KB, -(64 + cellx + 4 * (celly - 1)));
-            if check_pit && check_W
+            check_no_pit =  CS4300_Ask(KB, -(0 + cellx + 4 * (celly - 1)));
+            check_no_W = CS4300_Ask(KB, -(64 + cellx + 4 * (celly - 1)));
+            if check_no_pit && check_no_W
                 safe(cellx,celly) = 1;
-            else
+            end
+            
+            check_pit =  CS4300_Ask(KB, (0 + cellx + 4 * (celly - 1)));
+            if check_pit
                 safe(cellx,celly) = 0;
+            end
+            
+            % Locate the Wampus if not alocated
+            if W_pos(:,1) ~= -1
+                check_W = CS4300_Ask(KB, (64 + cellx + 4 * (celly - 1)));
+                if check_W
+                    safe(cellx,celly) = 0;
+                    W_pos = [cellx, celly];
+                end
             end
         end
     end
 end
 
 % Ask KB if the current has glitter.
-check_g =  CS4300_Ask(KB, -(16 + x + 4 * (y - 1)));
+check_g =  CS4300_Ask(KB, (16 + x + 4 * (y - 1)));
 if check_g
     [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
         [1,1,0],'CS4300_A_star_Man');
@@ -67,51 +77,71 @@ end
 
 % Plan a route to the closest safe square that it has not visited yet
 if isempty(plan)
-    OK1 = CS4300_choose_closest(safe,visited, [agent.x,agent.y]);
-    if ~isempty(OK1)
+    safe_close = CS4300_choose_closest(safe,visited, [agent.x,agent.y],1);
+    if ~isempty(safe_close)
         [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
-            [OK1(1),OK1(2),0],'CS4300_A_star_Man');
+            [safe_close(1),safe_close(2),0],'CS4300_A_star_Man');
         plan = [so(2:end,end)];
     end
 end
 
 % See if still have arrow
 if isempty(plan)
-    goal = [];
-    neighbors = CS4300_Wumpus_neighbors(agent.x,agent.y);
-    num_neighbors = length(neighbors(:,1));
-    for n = 1:num_neighbors
-        if board(4-neighbors(n,2)+1,neighbors(n,1))<0
-            goal = neighbors(n,:);
+    if have_arrow && W_pos(:,1) ~= -1
+        valid_pos = [W_pos];
+        
+        for celly = 1:length(safe(:,1))
+            if celly ~= W_pos(1,:) && safe(W_pos(:,1), celly) == 1
+                valid_pos(end+1) = [W_pos(:,1), celly];
+            end
+        end
+        
+        for cellx = 1:length(safe(1,:))
+            if cellx ~= W_pos(:,1) && safe(cellx, W_pos(1,:)) == 1
+                valid_pos(end+1) = [cellx, W_pos(1,:)];
+            end
+        end
+        valid_pos = valid_pos(2:end);
+        
+        closest = [];
+        if ~isempty(valid_pos)
+            % find the closest square
+            closest_dis = 99;
+            for i = 1:length(valid_pos(:,1))
+                temp = [valid_pos(i),4-rows(i)+1];
+                if CS4300_A_star_Man(current_pos, temp) < closest_dis
+                    closest = temp;
+                    closest_dis = CS4300_A_star_Man(current_pos, closest);
+                end
+            end
+        end
+        
+        %SHOOT
+        if ~isempty(closest)
+            [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
+                [closest(1),closest(2),0],'CS4300_A_star_Man');
+            % TODO: TRUN_SEQUENCE
+            plan = [so(2:end,end), TRUN_SEQUENCE, SHOOT];
         end
     end
-    if isempty(goal)
-        [rows,cols] = find(board==-1);
-        if isempty(rows)
-            goal = [1,1];
-        else
-            goal = [cols(1),4-rows(1)+1];
-        end
-    end
-    [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
-        [goal,0],'CS4300_A_star_Man');
-    plan = [so(2:end,end)];
 end
 
 % Looks for a square to explore that is not provably unsafe
 % Take a risk
 if isempty(plan)
-    % Look for a square to explore
-    [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
-        [HERE],'CS4300_A_star_Man');
-    plan = [so(2:end,end)];
+    OK_close = CS4300_choose_closest(safe,visited, [agent.x,agent.y],0);
+    if ~isempty(OK_close)
+        [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
+            [OK_close(1),OK_close(2),0],'CS4300_A_star_Man');
+        plan = [so(2:end,end)];
+    end
 end
 
 % The mission is impossible, retreats to [1,1]
 if isempty(plan)
     [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
         [1,1,0],'CS4300_A_star_Man');
-    plan = [so(2:end,end)];
+    plan = [so(2:end,end), CLIMB];
 end
 
 % Execute the action from the plan one by one
@@ -134,6 +164,6 @@ if action==LEFT
     agent.dir = rem(agent.dir+1,4);
 end
 
-if action==GRAB
-    have_gold = 1;
+if action==SHOOT
+    have_arrow = 0;
 end
