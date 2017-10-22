@@ -18,4 +18,5 @@ function b = CS4300_Ask(KB,sentence)
 % Fall 2017
 %
 
-b = isempty(CS4300_RTP(KB, sentence, 1:80));
+[Sip,finished] = CS4300_RTP(KB, sentence, 1:80);
+b = finished && isempty(Sip);

@@ -1,4 +1,4 @@
-function Sip = CS4300_RTP(sentences,thm,vars)
+function [Sip, finished] = CS4300_RTP(sentences,thm,vars)
 % CS4300_RTP - resolution theorem prover
 % On input:
 %     sentences (CNF data structure): array of conjuctive clauses
@@ -10,6 +10,7 @@ function Sip = CS4300_RTP(sentences,thm,vars)
 %     Sip (CNF data structure): results of resolution
 %        []: proved sentence |- thm
 %        not []: thm does not follow from sentences
+%     finished (boolean): this function is done in 30 sec
 % Method:
 %  Let S1 = S.
 % Let i = 1.
@@ -37,8 +38,15 @@ function Sip = CS4300_RTP(sentences,thm,vars)
 %     T. Henderson
 %     UU
 %     Summer 2014
+% Modified by:
+%     Haochen Zhang & Tim Wei
+%     UU
+%     Fall 2017
 %
 
+finished = 1;
+
+s = tic;
 num_sentences = length(sentences);
 len_thm = length(thm(1).clauses);
 not_thm = -thm(1).clauses;
@@ -57,6 +65,9 @@ for i = 1:n
         Sip = [];
         return
     end
-    Sipn = CS4300_update_S(Sip,Ti,Ui);
+    [Sipn, finished] = CS4300_update_S(Sip,Ti,Ui,s);
+    if ~finished
+        return;
+    end
 end
 Sip = Sipn;

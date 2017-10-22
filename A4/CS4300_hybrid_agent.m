@@ -27,7 +27,7 @@ if isempty(board)
     have_arrow = 1;
     % Wampus position unknown
     W_pos = [-1,-1];
-    KB = BR_gen_KB();
+    [~,KB,~] = BR_gen_KB();
 end
 
 FORWARD = 1;
@@ -37,6 +37,12 @@ GRAB = 4;
 SHOOT = 5;
 CLIMB = 6;
 
+P_offset = 0;
+B_offset = 16;
+G_offset = 32;
+S_offset = 48;
+W_offset = 64;
+
 % Update KB
 sentence = CS4300_make_percept_sentence(percept,agent.x,agent.y);
 KB = CS4300_Tell(KB, sentence);
@@ -45,23 +51,29 @@ KB = CS4300_Tell(KB, sentence);
 for celly = 1:length(safe(:,1))
     for cellx = 1:length(safe(1,:))
         if safe(cellx,celly) == -1
-            check_no_pit =  CS4300_Ask(KB, -(0 + cellx + 4 * (celly - 1)));
-            check_no_W = CS4300_Ask(KB, -(64 + cellx + 4 * (celly - 1)));
+            index = cellx + 4 * (celly - 1);
+            P_index = index + P_offset;
+            W_index = index + W_offset;
+            check_no_pit =  CS4300_Ask(KB, CS4300_literal_CNF(-P_index));
+            check_no_W = CS4300_Ask(KB, CS4300_literal_CNF(-W_index));
             if check_no_pit && check_no_W
                 safe(cellx,celly) = 1;
+                continue;
             end
             
-            check_pit =  CS4300_Ask(KB, (0 + cellx + 4 * (celly - 1)));
+            check_pit =  CS4300_Ask(KB, CS4300_literal_CNF(P_index));
             if check_pit
                 safe(cellx,celly) = 0;
+                continue;
             end
             
-            % Locate the Wampus if not alocated
+            % Locate the Wampus if not located
             if W_pos(:,1) ~= -1
-                check_W = CS4300_Ask(KB, (64 + cellx + 4 * (celly - 1)));
+                check_W = CS4300_Ask(KB, CS4300_literal_CNF(W_index));
                 if check_W
                     safe(cellx,celly) = 0;
                     W_pos = [cellx, celly];
+                    continue;
                 end
             end
         end
@@ -70,7 +82,8 @@ end
 
 % Ask KB if the current has glitter.
 if isempty(plan)
-    if CS4300_Ask(KB, (16 + x + 4 * (y - 1)))
+    G_index = agent.x + 4 * (agent.y - 1) + G_offset;
+    if CS4300_Ask(KB, CS4300_literal_CNF(G_index))
         [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
             [1,1,0],'CS4300_A_star_Man');
         plan = [GRAB;so(2:end,end);CLIMB];

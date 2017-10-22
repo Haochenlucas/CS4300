@@ -25,7 +25,7 @@ function sentence = CS4300_make_percept_sentence(percept,x,y)
 % Stence: 49-64
 % Wempus 65-80
 
-sentence = cell(5, 1);
+sentence = [];
 
 stench = 48 + x + 4 * (y - 1);
 if percept(1)
