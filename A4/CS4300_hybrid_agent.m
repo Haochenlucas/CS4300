@@ -50,20 +50,20 @@ KB = CS4300_Tell(KB, sentence);
 % Update safe
 for celly = 1:length(safe(:,1))
     for cellx = 1:length(safe(1,:))
-        if safe(cellx,celly) == -1
+        if safe(4-celly+1,cellx) == -1
             index = cellx + 4 * (celly - 1);
             P_index = index + P_offset;
             W_index = index + W_offset;
             check_no_pit =  CS4300_Ask(KB, CS4300_literal_CNF(-P_index));
             check_no_W = CS4300_Ask(KB, CS4300_literal_CNF(-W_index));
             if check_no_pit && check_no_W
-                safe(cellx,celly) = 1;
+                safe(4-celly+1,cellx) = 1;
                 continue;
             end
             
             check_pit =  CS4300_Ask(KB, CS4300_literal_CNF(P_index));
             if check_pit
-                safe(cellx,celly) = 0;
+                safe(4-celly+1,cellx) = 0;
                 continue;
             end
             
@@ -71,8 +71,8 @@ for celly = 1:length(safe(:,1))
             if W_pos(:,1) ~= -1
                 check_W = CS4300_Ask(KB, CS4300_literal_CNF(W_index));
                 if check_W
-                    safe(cellx,celly) = 0;
-                    W_pos = [cellx, celly];
+                    safe(4-celly+1,cellx) = 0;
+                    W_pos = [4-celly+1,cellx];
                     continue;
                 end
             end
@@ -102,19 +102,19 @@ end
 
 % See if still have arrow
 if isempty(plan)
-    if have_arrow && W_pos(:,1) ~= -1
+    if have_arrow && W_pos(1) ~= -1
         % Add all possible safe position that can make a shoot
         valid_pos = [];
         
         for celly = 1:length(safe(:,1))
-            if celly ~= W_pos(1,:) && safe(W_pos(:,1), celly) == 1
-                valid_pos = [valid_pos; W_pos(:,1), celly];
+            if celly ~= W_pos(1,:) && safe(celly,W_pos(1)) == 1
+                valid_pos = [valid_pos; celly,W_pos(1)];
             end
         end
         
         for cellx = 1:length(safe(1,:))
-            if cellx ~= W_pos(:,1) && safe(cellx, W_pos(1,:)) == 1
-                valid_pos = [valid_pos; cellx, W_pos(1,:)];
+            if cellx ~= W_pos(:,1) && safe(W_pos(2), cellx) == 1
+                valid_pos = [valid_pos; W_pos(2), cellx];
             end
         end
                 
@@ -123,7 +123,7 @@ if isempty(plan)
             % find the closest square
             closest_dis = 99;
             for i = 1:length(valid_pos(:,1))
-                temp = [valid_pos(i),4-rows(i)+1];
+                temp = [valid_pos(i,2),4-valid_pos(i,1)+1];
                 if CS4300_A_star_Man([agent.x,agent.y], temp) < closest_dis
                     closest = temp;
                     closest_dis = CS4300_A_star_Man([agent.x,agent.y],...

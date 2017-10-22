@@ -182,3 +182,11 @@ for i = 1:16
         KBi(cur_i).clauses(end+1) =  S_offset + i;
     end
 end
+
+for c = KBi
+    c.clauses = unique(c.clauses);
+end
+
+% No pit and Wampus at (1,1)
+KBi(end + 1).clauses(1) = -(1 + P_offset);
+KBi(end + 1).clauses(1) = -(1 + W_offset);
