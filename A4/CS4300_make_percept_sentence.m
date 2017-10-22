@@ -22,7 +22,7 @@ function sentence = CS4300_make_percept_sentence(percept,x,y)
 % Pit: 1-16
 % Glitter: 17-32
 % Breeze: 33-48
-% Stence: 49-64
+% Stench: 49-64
 % Wempus 65-80
 
 sentence = [];

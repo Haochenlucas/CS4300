@@ -38,8 +38,8 @@ SHOOT = 5;
 CLIMB = 6;
 
 P_offset = 0;
-B_offset = 16;
-G_offset = 32;
+G_offset = 16;
+B_offset = 32;
 S_offset = 48;
 W_offset = 64;
 

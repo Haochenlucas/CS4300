@@ -43,10 +43,10 @@ for ind_Ti = 1:len_Ti
         end
     end
     
-    if toc(start_time) > 0.5
-        finished = 0;
-        return;
-    end
+%     if toc(start_time) > 0.1
+%         finished = 0;
+%         return;
+%     end
 end
 
 indexes = find(found==0);
