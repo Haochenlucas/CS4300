@@ -12,7 +12,7 @@ function action = CS4300_hybrid_agent(percept)
 % Fall 2017
 %
 
-persistent plan board agent safe visited have_arrow W_pos
+persistent plan board agent safe visited have_arrow W_pos KB
 
 if isempty(board)
     plan = [];
@@ -27,6 +27,7 @@ if isempty(board)
     have_arrow = 1;
     % Wampus position unknown
     W_pos = [-1,-1];
+    KB = BR_gen_KB();
 end
 
 FORWARD = 1;
@@ -68,11 +69,12 @@ for celly = 1:length(safe(:,1))
 end
 
 % Ask KB if the current has glitter.
-check_g =  CS4300_Ask(KB, (16 + x + 4 * (y - 1)));
-if check_g
-    [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
-        [1,1,0],'CS4300_A_star_Man');
-    plan = [GRAB;so(2:end,end);CLIMB];
+if isempty(plan)
+    if CS4300_Ask(KB, (16 + x + 4 * (y - 1)))
+        [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
+            [1,1,0],'CS4300_A_star_Man');
+        plan = [GRAB;so(2:end,end);CLIMB];
+    end
 end
 
 % Plan a route to the closest safe square that it has not visited yet
@@ -90,23 +92,19 @@ if isempty(plan)
     if have_arrow && W_pos(:,1) ~= -1
         % Add all possible safe position that can make a shoot
         valid_pos = [];
-        valid_pos(1) = W_pos;
         
         for celly = 1:length(safe(:,1))
             if celly ~= W_pos(1,:) && safe(W_pos(:,1), celly) == 1
-                valid_pos(end+1) = [W_pos(:,1), celly];
+                valid_pos = [valid_pos; W_pos(:,1), celly];
             end
         end
         
         for cellx = 1:length(safe(1,:))
             if cellx ~= W_pos(:,1) && safe(cellx, W_pos(1,:)) == 1
-                valid_pos(end+1) = [cellx, W_pos(1,:)];
+                valid_pos = [valid_pos; cellx, W_pos(1,:)];
             end
         end
-        
-        % Delete the position of the Wampus
-        valid_pos = valid_pos(2:end);
-        
+                
         closest = [];
         if ~isempty(valid_pos)
             % find the closest square
@@ -115,17 +113,19 @@ if isempty(plan)
                 temp = [valid_pos(i),4-rows(i)+1];
                 if CS4300_A_star_Man([agent.x,agent.y], temp) < closest_dis
                     closest = temp;
-                    closest_dis = CS4300_A_star_Man([agent.x,agent.y], closest);
+                    closest_dis = CS4300_A_star_Man([agent.x,agent.y],...
+                        closest);
                 end
             end
         end
         
         %SHOOT
         if ~isempty(closest)
-            [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
-                [closest(1),closest(2),0],'CS4300_A_star_Man');
+            [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,...
+                agent.dir],[closest(1),closest(2),0],'CS4300_A_star_Man');
             % Flag to show need turn sequence
-            plan = [so(2:end,end), [-1,-1,-1,-1], CLIMB];
+            plan = [so(2:end,end), CS4300_gen_turn_seq(closest, W_pos,...
+                agent), SHOOT];
         end
     end
 end
@@ -151,16 +151,6 @@ end
 % Execute the action from the plan one by one
 action = plan(1);
 plan = plan(2:end);
-
-
-% The next action should be a trun sequence
-% Since the previous action will always be FORWARE, use the current dir...
-%  as the direction that agent reach the shooting square
-if plan(2) == -1        % If the next action is [-1, -1, -1, -1]
-    trun_seq = CS4300_Redirect_to_W(closest, W_pos,...
-        [agent.x,agent.y,agent.dir]);
-    plan(1) = trun_seq;
-end
 
 if action==FORWARD
     [x_new,y_new] = CS4300_move(agent.x,agent.y,agent.dir);

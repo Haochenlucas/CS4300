@@ -48,7 +48,6 @@ else
     sentence(3) = -glitter;
 end
 
-scream = 81;
 if percept(4)
     sentence(4) = 81;
 else
