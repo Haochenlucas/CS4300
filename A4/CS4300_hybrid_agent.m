@@ -58,6 +58,7 @@ for celly = 1:length(safe(:,1))
             check_no_W = CS4300_Ask(KB, CS4300_literal_CNF(-W_index));
             if check_no_pit && check_no_W
                 safe(4-celly+1,cellx) = 1;
+                board(4-celly+1,cellx) = 0;
                 continue;
             end
             
@@ -170,7 +171,6 @@ if action==FORWARD
     agent.x = x_new;
     agent.y = y_new;
     visited(4-y_new+1,x_new) = 1;
-    board(4-y_new+1,x_new) = 0;
 end
 
 if action==RIGHT

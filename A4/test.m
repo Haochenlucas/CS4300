@@ -1,4 +1,5 @@
 s = tic;
 clear CS4300_hybrid_agent
-action = CS4300_hybrid_agent([0,0,0,0,0])
+[scores,traces] = CS4300_WW3(50,'CS4300_hybrid_agent');
+CS4300_show_trace(traces,1);
 toc(s)
