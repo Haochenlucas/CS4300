@@ -176,6 +176,7 @@ if isempty(plan)
 end
 
 % Execute the action from the plan one by one
+disp(plan);
 action = plan(1);
 plan = plan(2:end);
 
@@ -200,3 +201,5 @@ end
 if action==SHOOT
     have_arrow = 0;
 end
+
+disp(agent);
