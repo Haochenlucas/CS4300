@@ -33,7 +33,9 @@ board1 = [0,0,0,3;...
     0,0,0,0;...
     2,1,0,0;...
     0,0,0,0];
+s = tic;
 [score,trace] = CS4300_WW1(max_steps,f_name,board1);
+t1 = toc(s)
 scores(1).board = board1;
 scores(1).score = score;
 scores(1).trace = trace;
@@ -44,7 +46,9 @@ board2 = [0,0,0,1;...
     3,2,1,0;...
     0,0,0,0;...
     0,0,1,0];
+s = tic;
 [score,trace] = CS4300_WW1(max_steps,f_name,board2);
+t2 = toc(s)
 scores(2).board = board2;
 scores(2).score = score;
 scores(2).trace = trace;
@@ -55,7 +59,9 @@ board3 = [0,0,0,0;...
     0,0,0,0;...
     3,2,0,0;...
     0,1,0,0];
+s = tic;
 [score,trace] = CS4300_WW1(max_steps,f_name,board3);
+t3 = toc(s)
 scores(3).board = board3;
 scores(3).score = score;
 scores(3).trace = trace;
