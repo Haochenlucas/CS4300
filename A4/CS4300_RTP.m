@@ -43,6 +43,7 @@ loop do
 % counter parts in pseudo code.
 
 s = tic;
+finished = 1;
 
 l = length(sentences);
 % sort all clauses in sentences
