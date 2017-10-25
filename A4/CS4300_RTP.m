@@ -1,4 +1,4 @@
-function Sip = CS4300_RTP(sentences,thm,vars)
+function [Sip,finished] = CS4300_RTP(sentences,thm,vars)
 % CS4300_RTP - resolution theorem prover
 % On input:
 % sentences (CNF data structure): array of conjuctive clauses
