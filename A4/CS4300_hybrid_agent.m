@@ -80,7 +80,7 @@ if on_new
                 end
 
                 % Locate the Wampus if not located
-                if W_pos(:,1) ~= -1
+                if W_pos(:,1) == -1
                     check_W = CS4300_Ask(KB, CS4300_literal_CNF(W_index));
                     if check_W
                         safe(4-celly+1,cellx) = 0;

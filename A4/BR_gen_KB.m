@@ -190,3 +190,18 @@ end
 % No pit and Wampus at (1,1)
 KBi(end + 1).clauses(1) = -(1 + P_offset);
 KBi(end + 1).clauses(1) = -(1 + W_offset);
+
+% If there is a pit, no W and G can be at that cell
+for i = 1:16
+    KB(end + 1).clauses(1) = "-P" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+    KB(end).clauses(end+1) = "-W" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+    
+    KB(end + 1).clauses(1) = "-P" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+    KB(end).clauses(end+1) = "-G" + (mod(i-1, 4)+1) + (floor((i-1)/4)+1);
+
+    KBi(end + 1).clauses(1) = -(i + P_offset);
+    KBi(end).clauses(end+1) = -(i + W_offset);
+    
+    KBi(end + 1).clauses(1) = -(i + P_offset);
+    KBi(end).clauses(end+1) = -(i + G_offset);
+end
