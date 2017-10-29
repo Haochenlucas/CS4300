@@ -35,3 +35,6 @@ function [pits,Wumpus] = CS4300_WP_estimates(breezes,stench,num_trials)
 % UU
 % Fall 2016
 %
+
+pits = zeros(4,4);
+Wumpus = zeros(4,4);
