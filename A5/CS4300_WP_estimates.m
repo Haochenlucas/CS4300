@@ -35,3 +35,18 @@ function [pits,Wumpus] = CS4300_WP_estimates(breezes,stench,num_trials)
 % UU
 % Fall 2016
 %
+
+pits = zeros(4,4);
+Wumpus = pits;
+count = 0;
+for t = 1:num_trials
+    b = CS4300_gen_board(0.2);
+    while ~CS4300_board_fits_percept(breezes,stench,b)
+        b = CS4300_gen_board(0.2);
+    end
+    count = count + 1;
+    pits = pits + (b == 1);
+    Wumpus = Wumpus + (b > 2);
+end
+pits = pits / count;
+Wumpus = Wumpus / count;
