@@ -26,6 +26,9 @@ function percept = CS4300_get_percept(board,agent,bumped,screamed)
 %     UU
 %     Summer 2015
 %
+%     Modified by
+%     Haochen Zhang & Tim Wei
+%     Fall 2017
 
 PIT = 1;
 GOLD = 2;

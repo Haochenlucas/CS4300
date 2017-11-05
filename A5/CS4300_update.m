@@ -17,6 +17,9 @@ function [board_out,agent_out,bumped,screamed] = CS4300_update(...
 %     UU
 %     Summer 2015
 %
+%     Modified by
+%     Haochen Zhang & Tim Wei
+%     Fall 2017
 
 NUM_ROWS = 4;
 NUM_COLS = 4;

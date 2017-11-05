@@ -12,6 +12,9 @@ function neis = BR_Wumpus_neighbors(x,y)
 %     UU
 %     Summer 2017
 %
+%     Modified by
+%     Haochen Zhang & Tim Wei
+%     Fall 2017
 
 neis = [];
 for xx = x-1:x+1

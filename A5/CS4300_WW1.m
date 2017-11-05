@@ -17,6 +17,9 @@ function [score,trace] = CS4300_WW1(max_steps,f_name,board)
 %     UU
 %     Summer 2015; modified Fall 2016
 %
+%     Modified by
+%     Haochen Zhang & Tim Wei
+%     Fall 2017
 
 FORWARD = 1;
 RIGHT = 2;
