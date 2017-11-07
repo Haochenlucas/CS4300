@@ -1,8 +1,8 @@
-function closest = CS4300_choose_closest(safe,visited,current_pos, mode)
+function closest = CS4300_choose_closest(danger,frontiers,current_pos, mode)
 % CS4300_choose1 - choose a closest safe place to go
 % On input:
-%     safe (4x4 array): 1 if safe, else 0
-%     visited (4x4 array): 1 if visited, else 0
+%     danger (4x4 array): 0 if safe, 0.xx means the possibility of danger
+%     frontiers (4x4 array): 1 if is frontier, else 0
 %     current_pos (1x2 vector): [x y] current location
 %     mode (int): 1 if find SAFE square, else find OK squares
 % On output:
@@ -15,11 +15,34 @@ function closest = CS4300_choose_closest(safe,visited,current_pos, mode)
 %     Fall 2015
 %
 
+% rows should be cols and cols should be rows
 closest = [];
 if mode == 1
-    [rows,cols] = find(safe==1&visited==0);
+    [rows,cols] = find(danger==0&frontiers==1);
 else
-    [rows,cols] = find(safe==-1&visited==0);
+    % Sort the danger rating
+    [rows,cols] = find(danger>0&frontiers==1);
+    
+    num_cell = length(cols(:,1));
+    sort_danger = zeros(num_cell, 3);
+    for i = 1:num_cell
+        sort_danger(i,1) = rows(i);
+        sort_danger(i,2) = cols(i);
+        sort_danger(i,3) = danger(rows(i),cols(i));
+    end
+    
+    sort_danger = sortrows(sort_danger, 3);
+    for i = 1:num_cell
+        if sort_danger(i,3) ~= sort_danger(1,3)
+            sort_danger = sort_danger(1:i-1,1:2);
+            break
+        end
+    end
+    
+    for i = 1:length(sort_danger(:,1))
+        rows(i) = sort_danger(i,1);
+        cols(i) = sort_danger(i,2);
+    end
 end
 
 if ~isempty(rows)

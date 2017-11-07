@@ -1,6 +1,6 @@
 function frontiers = CS4300_frontier(visited)
 
-frontiers = [];
+frontiers = zeros(4,4);
 row = 0;
 col = 0;
 
@@ -11,12 +11,9 @@ for r = 1:4
             num_nei = length(nei(:,1));
             for n = 1:num_nei
                 if visited(4-nei(n,2)+1,nei(n,1))==0
-                    row = 4 - nei(n,2) + 1;
-                    col = nei(n,1);
-                    if isempty(frontiers) || ~any((frontiers(:,1) == row)...
-                            & (frontiers(:,2) == col))
-                        frontiers = [frontiers;row,col];
-                    end
+                    col = 4 - nei(n,2) + 1;
+                    row = nei(n,1);
+                    frontiers(col,row) = 1;
                 end
             end
         end
