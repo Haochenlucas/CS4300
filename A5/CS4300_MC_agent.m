@@ -1,33 +1,19 @@
-function action = CS4300_MC_agent(percept)
-% CS4300_MC_agent - Monte Carlo agent with a few informal rules
+function action = CS4300_hybrid_agent(percept)
+% CS4300_hybrid_agent - hybrid random and logic-based agent
 % On input:
-% percept (1x5 Boolean vector): percept from Wumpus world
-% (1): stench
-% (2): breeze
-% (3): glitter
-% (4): bump
-% (5): scream
+% percept( 1x5 Boolean vector): percepts
+%               stench, breeze, glitter, scream, bump
 % On output:
-% action (int): action to take
-% 1: FORWARD
-% 2: RIGHT
-% 3: LEFT
-% 4: GRAB
-% 5: SHOOT
-% 6: CLIMB
+% action (int): action selected by agent
 % Call:
-% a = CS4300_MC_agent(percept);
+% a = CS4300_hybrid_agent([0,0,0,0,0]);
 % Author:
-%     T. Henderson
-%     UU
-%     Fall 2017
+% Haochen Zhang & Tim Wei
+% UU
+% Fall 2017
 %
-%     Modified by
-%     Haochen Zhang & Tim Wei
-%     Fall 2017
 
-persistent plan board agent safe visited have_arrow W_pos KB on_new...
-    breezes stench pts Wumpus
+persistent plan board agent safe visited have_arrow W_pos KB on_new
 
 if isempty(board)
     plan = [];
@@ -43,11 +29,8 @@ if isempty(board)
     have_arrow = 1;
     % Wampus position unknown
     W_pos = [-1,-1];
+    [~,KB,~] = BR_gen_KB();
     on_new = 1;
-    breezes = -ones(4,4);
-    stench = -ones(4,4);
-    pts = -ones(4,4);
-    Wumpus = -ones(4,4);
 end
 
 FORWARD = 1;
@@ -63,19 +46,57 @@ B_offset = 32;
 S_offset = 48;
 W_offset = 64;
 
-% Update breezes and stence
-breezes(4-agent.y+1, agent.x) = percept(2);
-stench(4-agent.y+1, agent.x) = percept(1);
-
-% Update pts and Wumpus
-[pts,Wumpus] = CS4300_WP_estimates(breezes,stench,50);
+% Update KB
+sentence = CS4300_make_percept_sentence(percept,agent.x,agent.y);
+KB = CS4300_Tell(KB, sentence);
 
 % Update safe
+if on_new
+    for celly = 1:length(safe(:,1))
+        for cellx = 1:length(safe(1,:))
+            if safe(4-celly+1,cellx) == -1
+                index = cellx + 4 * (celly - 1);
+                P_index = index + P_offset;
+                W_index = index + W_offset;
+                check_no_pit =  CS4300_Ask(KB, CS4300_literal_CNF(-P_index));
+                check_no_W = CS4300_Ask(KB, CS4300_literal_CNF(-W_index));
+%                 if celly ==2 & cellx ==2 &agent.x==2&agent.y==2
+%                     disp('ya')
+%                     t = tic;
+%                 end
+                if check_no_pit && check_no_W
+                    safe(4-celly+1,cellx) = 1;
+                    board(4-celly+1,cellx) = 0;
+                    continue;
+                end
+%                 if celly ==2 & cellx ==2 &agent.x==2&agent.y==2
+%                     toc(t)
+%                 end
+                
+                check_pit =  CS4300_Ask(KB, CS4300_literal_CNF(P_index));
+                if check_pit
+                    safe(4-celly+1,cellx) = 0;
+                    continue;
+                end
+
+                % Locate the Wampus if not located
+                if W_pos(:,1) == -1
+                    check_W = CS4300_Ask(KB, CS4300_literal_CNF(W_index));
+                    if check_W
+                        safe(4-celly+1,cellx) = 0;
+                        W_pos = [4-celly+1,cellx];
+                        continue;
+                    end
+                end
+            end
+        end
+    end
+end
 
 % Ask KB if the current has glitter.
 if isempty(plan)
     G_index = agent.x + 4 * (agent.y - 1) + G_offset;
-    if percept(3)
+    if CS4300_Ask(KB, CS4300_literal_CNF(G_index))
         [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
             [1,1,0],'CS4300_A_star_Man');
         plan = [GRAB;so(2:end,end);CLIMB];
@@ -145,6 +166,13 @@ if isempty(plan)
             [OK_close(1),OK_close(2),0],'CS4300_A_star_Man');
         plan = [so(2:end,end)];
     end
+end
+
+% The mission is impossible, retreats to [1,1]
+if isempty(plan)
+    [so,no] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
+        [1,1,0],'CS4300_A_star_Man');
+    plan = [so(2:end,end), CLIMB];
 end
 
 % Execute the action from the plan one by one
