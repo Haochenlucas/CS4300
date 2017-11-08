@@ -8,7 +8,7 @@ function d = CS4300_A_star_Man(state1,state2)
 % Call:
 %     d = CS4300_A_star_Man([1,1,0],[2,2,1]);
 % Author:
-%     <your name>
+%     Haochen Zhang & Tim Wei
 %     UU
 %     Fall 2016
 %

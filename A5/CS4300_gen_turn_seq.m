@@ -43,7 +43,9 @@ if initial(2) == goal(2)
     end
 end
 
+% should't happen
 if goal_dir == -1
+    disp("Turn sequence error.");
     return;
 end
 
