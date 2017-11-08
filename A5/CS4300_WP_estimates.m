@@ -1,4 +1,4 @@
-function [pits,Wumpus] = CS4300_WP_estimates(breezes,stench,num_trials)
+function [pits,Wumpus,fail] = CS4300_WP_estimates(breezes,stench,num_trials)
 % CS4300_WP_estimates - estimate pit and Wumpus likelihoods
 % On input:
 % breezes (4x4 Boolean array): presence of breeze percept at cell
@@ -13,6 +13,7 @@ function [pits,Wumpus] = CS4300_WP_estimates(breezes,stench,num_trials)
 % On output:
 % pits (4x4 [0,1] array): likelihood of pit in cell
 % Wumpus (4x4 [0 to 1] array): likelihood of Wumpus in cell
+% fail (boolean): the function failed to run num_trials times
 % Call:
 % breezes = -ones(4,4);
 % breezes(4,1) = 1;
@@ -39,10 +40,16 @@ function [pits,Wumpus] = CS4300_WP_estimates(breezes,stench,num_trials)
 pits = zeros(4,4);
 Wumpus = pits;
 count = 0;
+board_count = 0;
 for t = 1:num_trials
     b = CS4300_gen_board(0.2);
+    board_count = board_count + 1;
     while ~CS4300_board_fits_percept(breezes,stench,b)
+        if board_count == 1000000
+            break;
+        end
         b = CS4300_gen_board(0.2);
+        board_count = board_count + 1;
     end
     count = count + 1;
     pits = pits + (b == 1);
