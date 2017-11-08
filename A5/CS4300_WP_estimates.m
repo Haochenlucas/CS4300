@@ -40,6 +40,9 @@ function [pits,Wumpus,fail] = CS4300_WP_estimates(breezes,stench,num_trials)
 fail = 0;
 pits = zeros(4,4);
 Wumpus = pits;
+if ~num_trials
+    return;
+end
 count = 0;
 board_count = 0;
 for t = 1:num_trials
