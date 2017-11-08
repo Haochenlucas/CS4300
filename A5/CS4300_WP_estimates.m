@@ -37,6 +37,7 @@ function [pits,Wumpus,fail] = CS4300_WP_estimates(breezes,stench,num_trials)
 % Fall 2016
 %
 
+fail = 0;
 pits = zeros(4,4);
 Wumpus = pits;
 count = 0;
@@ -46,7 +47,10 @@ for t = 1:num_trials
     board_count = board_count + 1;
     while ~CS4300_board_fits_percept(breezes,stench,b)
         if board_count == 1000000
-            break;
+            fail = 1;
+            pits = pits / count;
+            Wumpus = Wumpus / count;
+            return;
         end
         b = CS4300_gen_board(0.2);
         board_count = board_count + 1;

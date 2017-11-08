@@ -1,10 +1,12 @@
 function a = CS4300_board_fits_percept(breezes,stench,board)
 
 a = 0;
-% loop through all cells in board
+% loop through all cells in breezes and stench
 for x = 1:4
     for y = 1:4
         cell = board(x,y);
+        b = breezes(x,y);
+        s = stench(x,y);
         % get neighbour of the cell
         neis = BR_Wumpus_neighbors(x,y);
         %see if the neighbous's percept fits
@@ -23,20 +25,6 @@ for x = 1:4
                     return;
                 end
             end
-        end
-    end
-end
-% loop through all cells in breezes and stench
-for x = 1:4
-    for y = 1:4
-        b = breezes(x,y);
-        s = stench(x,y);
-        % get neighbour of the cell
-        neis = BR_Wumpus_neighbors(x,y);
-        %see if the neighbous's percept fits
-        for i = 1:length(neis)
-            xn = neis(i,1);
-            yn = neis(i,2);
             if b == 1 && board(xn,yn) == 1
                 b = 0;
             end

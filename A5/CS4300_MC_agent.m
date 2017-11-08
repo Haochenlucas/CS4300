@@ -2,7 +2,7 @@ function action = CS4300_MC_agent(percept)
 % CS4300_hybrid_agent - hybrid random and logic-based agent
 % On input:
 % percept( 1x5 Boolean vector): percepts
-%               stench, breeze, glitter, scream, bump
+%               stench, breeze, glitter, bump, scream
 % On output:
 % action (int): action selected by agent
 % Call:
@@ -14,7 +14,7 @@ function action = CS4300_MC_agent(percept)
 %
 
 persistent plan board agent visited have_arrow on_new
-persistent breezes stench pits Wumpus danger
+persistent breezes stench screamed
 
 if isempty(board)
     plan = [];
@@ -25,12 +25,11 @@ if isempty(board)
     agent.dir = 0;
     visited = zeros(4,4);
     visited(4,1) = 1;
-    danger = -ones(4,4);
-    danger(4,1) = 0;
     have_arrow = 1;
     on_new = 1;
-    breezes = ones(4,4);
-    stench = ones(4,4);
+    breezes = -ones(4,4);
+    stench = -ones(4,4);
+    screamed = 0;
 end
 
 FORWARD = 1;
@@ -40,17 +39,26 @@ GRAB = 4;
 SHOOT = 5;
 CLIMB = 6;
 
-% Update breezes and stench
-breezes(4-agent.y+1, agent.x) = percept(2);
-stench(4-agent.y+1, agent.x) = percept(1);
-
-% Update pits and Wumpus
-num_trials = 50;
-[pits,Wumpus] = CS4300_WP_estimates(breezes,stench,num_trials);
+if percept(5)
+    screamed = 1;
+end
 
 % Update danger
-if on_new
-    danger = pits + Wumpus;
+if on_new || percept(5)
+    % Update breezes and stench
+    breezes(4-agent.y+1, agent.x) = percept(2);
+    if stench(4-agent.y+1, agent.x) == -1
+        stench(4-agent.y+1, agent.x) = percept(1);
+    end
+
+    % Update pits and Wumpus
+    num_trials = 50;
+    [pits_P,Wumpus_P] = CS4300_WP_estimates(breezes,stench,num_trials);
+    if screamed
+        Wumpus_P = zeros(4,4);
+    end
+
+    danger_P = pits_P + Wumpus_P;
 end
 
 frontiers = CS4300_frontier(visited);
@@ -66,8 +74,9 @@ end
 
 % Plan a route to the closest safe square that it has not visited yet
 if isempty(plan)
-    safe_close = CS4300_choose_closest(danger, frontiers, [agent.x,agent.y],1);
+    safe_close = CS4300_choose_closest(danger_P, frontiers, [agent.x,agent.y],1);
     if ~isempty(safe_close)
+        board(4 - safe_close(2) + 1, safe_close(1)) = 0;
         [so,~] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
             [safe_close(1),safe_close(2),0],'CS4300_A_star_Man');
         plan = so(2:end,end);
@@ -81,24 +90,30 @@ if isempty(plan)
         W_pos = [-1,-1];
         for col = 1:4
             for row = 1:4
-                if Wunpus(col,row) > 0.5
-                    W_pos = [4-col+1,row];
+                if Wumpus_P(col,row) > 0.5
+                    W_pos = [row,4-col+1];
                 end
             end
         end
         
         if W_pos(1) ~= -1
+            neis = BR_Wumpus_neighbors(W_pos(1),W_pos(2));
+            for i = 1:length(neis)
+                n = neis(i,:);
+                stench(4-n(2)+1,n(1)) = 1;
+            end
+            
             % Add all possible safe position that can make a shoot
             valid_pos = [];
 
             for celly = 1:length(visited(:,1))
-                if celly ~= W_pos(1,:) && visited(celly,W_pos(1)) == 1
+                if celly ~= W_pos(1,:) & visited(celly,W_pos(1)) == 1
                     valid_pos = [valid_pos; celly,W_pos(1)];
                 end
             end
 
             for cellx = 1:length(visited(1,:))
-                if cellx ~= W_pos(:,1) && visited(W_pos(2), cellx) == 1
+                if cellx ~= W_pos(:,1) & visited(W_pos(2), cellx) == 1
                     valid_pos = [valid_pos; W_pos(2), cellx];
                 end
             end
@@ -122,8 +137,11 @@ if isempty(plan)
                 [so,~] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,...
                     agent.dir],[closest(1),closest(2),0],'CS4300_A_star_Man');
                 % Flag to show need turn sequence
-                plan = [so(2:end,end), CS4300_gen_turn_seq(closest, W_pos,...
-                    agent), SHOOT];
+                future_agent.x = so(end,1);
+                future_agent.y = so(end,2);
+                future_agent.dir = so(end,3);
+                plan = [so(2:end,end); CS4300_gen_turn_seq(closest, W_pos,...
+                    future_agent); SHOOT];
             end
             
         end
@@ -133,7 +151,7 @@ end
 % Looks for a square to explore that is not provably unsafe
 % Take a risk
 if isempty(plan)
-    OK_close = CS4300_choose_closest(danger,frontiers, [agent.x,agent.y],0);
+    OK_close = CS4300_choose_closest(danger_P,frontiers, [agent.x,agent.y],0);
     if ~isempty(OK_close)
         board(4 - OK_close(2) + 1, OK_close(1)) = 0;
         [so,~] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...

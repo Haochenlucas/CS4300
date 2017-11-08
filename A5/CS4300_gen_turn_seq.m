@@ -3,11 +3,10 @@ function trun_seq = CS4300_gen_turn_seq(initial, goal, agent)
 % On input:
 %     closest (1x2 vector): [x y] location where agent fire the arrow
 %     W_pos (1x2 vector): [x y] location where W_pos are
-%     agent_dir (1x3 vector): agent x, y and direction
-%           Right: 0
-%           Up: 1
-%           Left: 2
-%           Down: 3
+%     agent (struct): agent x, y and direction
+%           x (int from 1 to 4): x index
+%           y (int from 1 to 4): y index
+%           dir (int from 0 to 3): direction
 % On output:
 %     trun_seq (1x4 array): solution sequence of turning
 % Call:
@@ -48,13 +47,14 @@ if goal_dir == -1
     return;
 end
 
-while goal_dir ~= agent.dir
-    if agent.dir < goal_dir
+if agent.dir < goal_dir
+    for i = 1:(goal_dir - agent.dir)
         trun_seq = [trun_seq; ROTATE_LEFT];
-    elseif agent.dir > goal_dir
+    end
+elseif agent.dir > goal_dir
+    for i = 1:(agent.dir - goal_dir)
         trun_seq = [trun_seq; ROTATE_RIGHT];
     end
 end
-
 
 
