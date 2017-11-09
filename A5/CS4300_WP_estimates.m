@@ -49,7 +49,7 @@ for t = 1:num_trials
     b = CS4300_gen_board(0.2);
     board_count = board_count + 1;
     while ~CS4300_board_fits_percept(breezes,stench,b)
-        if board_count > 10000 && count > 0
+        if board_count > 10000 && count > 0 || board_count > 1000000
             fail = 1;
             pits = pits / count;
             Wumpus = Wumpus / count;
