@@ -24,7 +24,7 @@ function action = CS4300_MC_agent(percept,num_trials)
 %       Fall 2017
 
 persistent plan board agent visited have_arrow on_new
-persistent breezes stench screamed
+persistent breezes stench screamed pits_P Wumpus_P danger_P
 
 if isempty(board)
     plan = [];
@@ -116,14 +116,14 @@ if isempty(plan)
             valid_pos = [];
 
             for celly = 1:length(visited(:,1))
-                if celly ~= W_pos(1,:) & visited(celly,W_pos(1)) == 1
-                    valid_pos = [valid_pos; celly,W_pos(1)];
+                if celly ~= W_pos(1,:) & visited(celly,W_pos(1))
+                    valid_pos = [valid_pos; W_pos(1), celly];
                 end
             end
 
             for cellx = 1:length(visited(1,:))
-                if cellx ~= W_pos(:,1) & visited(W_pos(2), cellx) == 1
-                    valid_pos = [valid_pos; W_pos(2), cellx];
+                if cellx ~= W_pos(:,1) & visited(4-W_pos(2)+1,cellx)
+                    valid_pos = [valid_pos; cellx, W_pos(2)];
                 end
             end
 
@@ -132,7 +132,7 @@ if isempty(plan)
                 % find the closest square
                 closest_dis = 99;
                 for i = 1:length(valid_pos(:,1))
-                    temp = [valid_pos(i,2),4-valid_pos(i,1)+1];
+                    temp = [valid_pos(i,1),valid_pos(i,2)];
                     if CS4300_A_star_Man([agent.x,agent.y], temp) < closest_dis
                         closest = temp;
                         closest_dis = CS4300_A_star_Man([agent.x,agent.y],...
