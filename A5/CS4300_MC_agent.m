@@ -62,7 +62,7 @@ if on_new || percept(5)
     end
 
     % Update pits and Wumpus
-    [pits_P,Wumpus_P] = CS4300_WP_estimates(breezes,stench,num_trials);
+    [pits_P,Wumpus_P,~] = CS4300_WP_estimates(breezes,stench,num_trials);
     if screamed
         Wumpus_P = zeros(4,4);
     end
