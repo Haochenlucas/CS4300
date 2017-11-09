@@ -164,7 +164,7 @@ if isempty(plan)
     if ~isempty(OK_close)
         board(4 - OK_close(2) + 1, OK_close(1)) = 0;
         [so,~] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,agent.dir],...
-            [OK_close(1),OK_close(2),0],'CS4300_A_star_Man');
+            [4-OK_close(2)+1, OK_close(1),0],'CS4300_A_star_Man');
         plan = so(2:end,end);
     end
 end
