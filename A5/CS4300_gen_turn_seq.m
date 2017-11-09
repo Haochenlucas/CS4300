@@ -28,9 +28,9 @@ DOWN = 3;
 goal_dir = -1;
 
 if initial(1) == goal(1)
-    if initial(2) < goal(2)
+    if initial(2) > goal(2)
         goal_dir = UP;
-    elseif initial(2) > goal(2)
+    elseif initial(2) < goal(2)
         goal_dir = DOWN;
     end
 end

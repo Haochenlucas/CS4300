@@ -145,12 +145,16 @@ if isempty(plan)
             if ~isempty(closest)
                 [so,~] = CS4300_Wumpus_A_star(board,[agent.x,agent.y,...
                     agent.dir],[closest(1),closest(2),0],'CS4300_A_star_Man');
-                % Flag to show need turn sequence
-                future_agent.x = so(end,1);
-                future_agent.y = so(end,2);
-                future_agent.dir = so(end,3);
-                plan = [so(2:end,end); CS4300_gen_turn_seq(closest, W_pos,...
-                    future_agent); SHOOT];
+                if ~isempty(so)
+                    % Flag to show need turn sequence
+                    future_agent.x = so(end,1);
+                    future_agent.y = so(end,2);
+                    future_agent.dir = so(end,3);
+                    plan = [so(2:end,end); CS4300_gen_turn_seq(closest, W_pos,...
+                        future_agent); SHOOT];
+                else
+                    plan = [CS4300_gen_turn_seq(closest, W_pos,agent);SHOOT];
+                end
             end
             
         end
