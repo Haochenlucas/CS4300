@@ -1,6 +1,33 @@
-function a = CS4300_board_fits_percept(breezes,stench,board)
+function match = CS4300_board_fits_percept(breezes,stench,board)
+% CS4300_board_fits_percept - return true if board matches our breezes ...
+%                           and stenches, false otherwise
+% On input:
+%       breezes (4x4 Boolean array): presence of breeze percept at cell
+%           -1: no knowledge
+%           0: no breeze detected
+%           1: breeze detected
+%       stench (4x4 Boolean array): presence of stench in cell
+%           -1: no knowledge
+%           0: no stench detected
+%           1: stench detected
+%       board (4x4 int array): Wumpus board
+%           0: nothing in room
+%           1: pit in room
+%           2: gold in room
+%           3: Wupmus in room
+%           4: both gold and Wumpus in room
+% On output:
+%       match (boolean): return true if board matches our breezes ...
+%                           and stenches, false otherwise
+% Call:
+%       CS4300_board_fits_percept(breezes,stench,b);
+% Author:
+%       Haochen Zhang & Tim Wei
+%       UU
+%       Fall 2016
+%
 
-a = 0;
+match = 0;
 % loop through all cells in breezes and stench
 for x = 1:4
     for y = 1:4
@@ -37,4 +64,4 @@ for x = 1:4
         end
     end
 end
-a = 1;
+match = 1;

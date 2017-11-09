@@ -1,14 +1,17 @@
 function closest = CS4300_choose_closest(danger,frontiers,current_pos, mode)
-% CS4300_choose1 - choose a closest safe place to go
+% CS4300_choose1 - choose a closest safe place to go or choos a closest...
+%                   OK place with the lowest probability of ...
+%                   danger (probability of pits + probability of Wumpus)
 % On input:
-%     danger (4x4 array): 0 if safe, 0.xx means the possibility of danger
+%     danger (4x4 array): 0 if safe, 0.xx means the possibility of ...
+%                   danger (probability of pits + probability of Wumpus)
 %     frontiers (4x4 array): 1 if is frontier, else 0
 %     current_pos (1x2 vector): [x y] current location
-%     mode (int): 1 if find SAFE square, else find OK squares
+%     mode (int): 1 if find SAFE cells, else find OK cells
 % On output:
-%     loc (1x2 vector): [x y] location
+%     closest (1x2 vector): [x y] location
 % Call:
-%     loc = CS4300_choose1(safe,visited);
+%     closest = CS4300_choose1(danger,frontiers,current_pos, mode);
 % Author:
 %     Haochen Zhang & Tim Wei
 %     UU
