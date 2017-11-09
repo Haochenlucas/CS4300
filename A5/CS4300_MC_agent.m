@@ -1,4 +1,4 @@
-function action = CS4300_MC_agent(percept)
+function action = CS4300_MC_agent(percept,num_trials)
 % CS4300_MC_agent - Monte Carlo agent with a few informal rules
 % On input:
 %        percept (1x5 Boolean vector): percept from Wumpus world
@@ -7,6 +7,7 @@ function action = CS4300_MC_agent(percept)
 %           (3): glitter
 %           (4): bump
 %           (5): scream
+%       num_trials (int): number of trials for MC to run
 % On output:
 %       action (int): action to take
 %           1: FORWARD
@@ -61,7 +62,6 @@ if on_new || percept(5)
     end
 
     % Update pits and Wumpus
-    num_trials = 50;
     [pits_P,Wumpus_P] = CS4300_WP_estimates(breezes,stench,num_trials);
     if screamed
         Wumpus_P = zeros(4,4);
@@ -99,7 +99,7 @@ if isempty(plan)
         W_pos = [-1,-1];
         for col = 1:4
             for row = 1:4
-                if Wumpus_P(col,row) > 0.5
+                if Wumpus_P(col,row) >= 0.5
                     W_pos = [row,4-col+1];
                 end
             end

@@ -1,9 +1,10 @@
-function [score,trace] = CS4300_WW1(max_steps,f_name,board)
+function [score,trace] = CS4300_WW1(max_steps,f_name,board,num_trials)
 % CS4300_WW1 - Wumpus World 1 simulator
 % On input:
 %     max_steps (int): maximum number of simulation steps
 %     f_name (string): name of agent function
 %     board (4x4 array): Wumpus world board
+%     num_trials (int): number of trials for MC to run
 % On output:
 %     score (int): agent score on game
 %     trace (nx3 int array): trace of state
@@ -51,7 +52,7 @@ score = 0;
 while step<max_steps&done==0
     step = step + 1;
     percept = CS4300_get_percept(board,agent,bumped,screamed);
-    action = feval(f_name,percept);
+    action = feval(f_name,percept,num_trials);
     if action==5
         score = score - 50;
     else
