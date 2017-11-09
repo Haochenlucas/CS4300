@@ -24,7 +24,7 @@ function action = CS4300_MC_agent(percept,num_trials)
 %       Fall 2017
 
 persistent plan board agent visited have_arrow on_new
-persistent breezes stench screamed pits_P Wumpus_P danger_P
+persistent breezes stench screamed pits_P Wumpus_P danger_P W_pos
 
 if isempty(board)
     plan = [];
@@ -51,6 +51,11 @@ CLIMB = 6;
 
 if percept(5)
     screamed = 1;
+    neis = BR_Wumpus_neighbors(W_pos(1),W_pos(2));
+    for i = 1:length(neis)
+        n = neis(i,:);
+        stench(4-n(2)+1,n(1)) = 1;
+    end
 end
 
 % Update danger
