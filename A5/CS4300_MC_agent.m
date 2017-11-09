@@ -105,13 +105,7 @@ if isempty(plan)
             end
         end
         
-        if W_pos(1) ~= -1
-            neis = BR_Wumpus_neighbors(W_pos(1),W_pos(2));
-            for i = 1:length(neis)
-                n = neis(i,:);
-                stench(4-n(2)+1,n(1)) = 1;
-            end
-            
+        if W_pos(1) ~= -1            
             % Add all possible safe position that can make a shoot
             valid_pos = [];
 

@@ -1,5 +1,5 @@
 ss = tic;
 clear CS4300_MC_agent;
-[s,t] = CS4300_WW1(10000,"CS4300_MC_agent",boards(6).board,50)
+[s,t] = CS4300_WW1(10000,"CS4300_MC_agent",boards(229).board,50)
 toc(ss);
 
