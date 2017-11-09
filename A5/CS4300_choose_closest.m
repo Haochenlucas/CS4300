@@ -41,7 +41,8 @@ else
             break
         end
     end
-    
+    rows = [];
+    cols = [];
     for i = 1:length(sort_danger(:,1))
         rows(i) = sort_danger(i,1);
         cols(i) = sort_danger(i,2);
