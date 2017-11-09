@@ -20,4 +20,5 @@ for i = 1:length(boards)
     [scores200(i),traces200(i).trace] = ...
         CS4300_WW1(10000,"CS4300_MC_agent",boards(i).board,200);
 end
-save('stats.mat','scores0','scores50','scores100','scores200','traces0','traces50','traces100','traces200')
+save('stats.mat','scores0','scores50','scores100','scores200','traces0'...
+    ,'traces50','traces100','traces200')
