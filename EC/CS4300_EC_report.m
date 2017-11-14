@@ -20,8 +20,8 @@ for i = 1:trialnum
         report(1,1).survive = report(1,1).survive + 1;
         temp(1,1).steps = [temp(1,1).steps; length(t)];
     end
-    clear CS4300_agent_Astar_AC;
-    t = CS4300_WW2(max_steps, 'CS4300_agent_Astar_AC', board);
+    clear CS4300_agent_Astar_PC;
+    t = CS4300_WW2(max_steps, 'CS4300_agent_Astar_PC', board);
     
     if t(end).agent.succeed
         report(2,1).survive = report(2,1).survive + 1;
@@ -37,8 +37,8 @@ for i = 1:trialnum
         report(1,2).survive = report(1,2).survive + 1;
         temp(1,2).steps = [temp(1,2).steps; length(t)];
     end
-    clear CS4300_agent_Astar_AC;
-    t = CS4300_WW2(max_steps, 'CS4300_agent_Astar_AC', board);
+    clear CS4300_agent_Astar_PC;
+    t = CS4300_WW2(max_steps, 'CS4300_agent_Astar_PC', board);
     
     if t(end).agent.succeed
         report(2,2).survive = report(2,2).survive + 1;
@@ -54,8 +54,8 @@ for i = 1:trialnum
         report(1,3).survive = report(1,3).survive + 1;
         temp(1,3).steps = [temp(1,3).steps; length(t)];
     end
-    clear CS4300_agent_Astar_AC;
-    t = CS4300_WW2(max_steps, 'CS4300_agent_Astar_AC', board);
+    clear CS4300_agent_Astar_PC;
+    t = CS4300_WW2(max_steps, 'CS4300_agent_Astar_PC', board);
     
     if t(end).agent.succeed
         report(2,3).survive = report(2,3).survive + 1;

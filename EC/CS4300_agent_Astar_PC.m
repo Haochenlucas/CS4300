@@ -1,32 +1,30 @@
-function action = CS4300_agent_Astar_AC(percept)
-% CS4300_agent_Astar_AC - A* search agent with AC
-% Uses A* to find best path back to start and AC to avoid trouble
+function action = CS4300_agent_Astar_PC(percept)
+% CS4300_agent_Astar_PC - A* search agent with PC
+% Uses A* to find best path back to start and PC to avoid trouble
 % On input:
-% percept (1x5 Boolean vector): percept values
-% (1): Stench
-% (2): Breeze
-% (3): Glitters
-% (4): Bumped
-% (5): Screamed
+%     percept (1x5 Boolean vector): percept values
+%     (1): Stench
+%     (2): Breeze
+%     (3): Glitters
+%     (4): Bumped
+%     (5): Screamed
 % On output:
-% action (int): action selected by agent
-% FORWARD = 1;
-% ROTATE_RIGHT = 2;
-% ROTATE_LEFT = 3;
-% GRAB = 4;
-% SHOOT = 5;
-% CLIMB = 6;
+%     action (int): action selected by agent
+%         FORWARD = 1;
+%         ROTATE_RIGHT = 2;
+%         ROTATE_LEFT = 3;
+%         GRAB = 4;
+%         SHOOT = 5;
+%         CLIMB = 6;
 % Call:
-% a = CS4300_agent_Astar_AC([0,0,0,0,0]);
+%     a = CS4300_agent_Astar_PC([0,0,0,0,0]);
+% Author:
+%     Tim Wei, Haochen Zhang
+%     UU
+%     Fall 2017
+%
 
-
-persistent got_gold
-persistent solution
-persistent state
-persistent board
-persistent empty_board
-persistent G
-persistent D
+persistent got_gold solution state board empty_board G D
 
 % Initialize static variables
 if isempty(got_gold)
@@ -60,7 +58,8 @@ end
 if percept(3) && isempty(solution)
     got_gold = 1;
     % TODO call A* find way back
-    [solution,~] = CS4300_Wumpus_A_star(board, state, [1,1,0], 'CS4300_m_distance');
+    [solution,~] = CS4300_Wumpus_A_star(board, state, [1,1,0],...
+        'CS4300_m_distance');
     
     % First step is empty
     solution(1,:) = [];
@@ -87,7 +86,7 @@ else
     if ~percept(2)
         D(node,3) = 0;
     end
-    D = CS4300_AC3(G,D,'CS4300_P_no_attack');
+    D = CS4300_PC(G,D,'CS4300_P_no_attack');
     % determines if a safe cell exists that has not been visited
     for node = 1:16
         if ~D(node,2)
@@ -98,7 +97,8 @@ else
             y = floor((node-1) / 4 + 1);
             if board(5-y,x)
                 board(5-y,x) = 0;
-                [solution,~] = CS4300_Wumpus_A_star(board, state, [x,y,0], 'CS4300_m_distance');
+                [solution,~] = CS4300_Wumpus_A_star(board, state, [x,y,0],...
+                    'CS4300_m_distance');
                 solution(1,:) = [];
                 board(5-y,x) = 1;
                 break;
@@ -123,4 +123,3 @@ else
         board(5-y,x) = 0;
     end
 end
-   
