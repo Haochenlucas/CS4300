@@ -24,7 +24,7 @@ function action = CS4300_agent_Astar_PC(percept)
 %     Fall 2017
 %
 
-persistent got_gold solution state board empty_board G D
+persistent got_gold solution state board empty_board G D on_new
 
 % Initialize static variables
 if isempty(got_gold)
@@ -52,6 +52,7 @@ if isempty(got_gold)
     end
     D = ones(16,3);
     D(1,2) = 0;
+    on_new = 1;
 end
 
 % Standing on the gold
@@ -81,27 +82,30 @@ if got_gold
 else
     x = state(1);
     y = state(2);
-    node = x + (y-1) * 4;
-    D(node,2) = 0;
-    if ~percept(2)
-        D(node,3) = 0;
-    end
-    D = CS4300_PC(G,D,'CS4300_P_no_attack');
-    % determines if a safe cell exists that has not been visited
-    for node = 1:16
-        if ~D(node,2)
-            x = mod(node,4);
-            if ~x
-                x = 4;
-            end
-            y = floor((node-1) / 4 + 1);
-            if board(5-y,x)
-                board(5-y,x) = 0;
-                [solution,~] = CS4300_Wumpus_A_star(board, state, [x,y,0],...
-                    'CS4300_m_distance');
-                solution(1,:) = [];
-                board(5-y,x) = 1;
-                break;
+    if on_new 
+        on_new = 0;
+        node = x + (y-1) * 4;
+        D(node,2) = 0;
+        if ~percept(2)
+            D(node,3) = 0;
+        end
+        D = CS4300_PC(G,D,'CS4300_P_no_attack');
+        % determines if a safe cell exists that has not been visited
+        for node = 1:16
+            if ~D(node,2)
+                x = mod(node,4);
+                if ~x
+                    x = 4;
+                end
+                y = floor((node-1) / 4 + 1);
+                if board(5-y,x)
+                    board(5-y,x) = 0;
+                    [solution,~] = CS4300_Wumpus_A_star(board, state, [x,y,0],...
+                        'CS4300_m_distance');
+                    solution(1,:) = [];
+                    board(5-y,x) = 1;
+                    break;
+                end
             end
         end
     end
@@ -120,6 +124,9 @@ else
     x = state(1);
     y = state(2);
     if x ~= -1
+        if board(5-y,x)
+            on_new = 1;
+        end
         board(5-y,x) = 0;
     end
 end
