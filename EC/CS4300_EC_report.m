@@ -1,6 +1,4 @@
-function report = CS4300_A2_report()
-
-trialnum = 2000;  % number of trials 
+trialnum = 500;  % number of trials 
 max_steps = 1000;
 for i = 1:2
     for j = 1:3
