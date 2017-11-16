@@ -21,26 +21,35 @@ function D_revised = CS4300_PC(G,D,P)
 %       Fall 2017
 %
 
+% n = 16, m = 3
 n = length(G);
 m = length(D(1,:));
 
+% Initialize the matrix
 for i = 1:n
     for j = 1:n
+        % Diagonal of the matrix
         if i == j
             R(i,j).R = eye(m,m);
+        % Neighboring cell
         elseif G(i,j)
             R(i,j).R = zeros(m,m);
+            
+            % Initialize 3x3 using predicate
             for a = 1:m
                 for b = 1:m
                     R(i,j).R(a,b) = feval(P,i,a,j,b);
                 end
             end
+            
+        % Everything is possible for cells that are not neighbors
         else
             R(i,j).R = ones(m,m);
         end
     end
 end
 
+% Set all values to 0 for cells that have 0 in that percept in D
 for i = 1:n
     for j = 1:m
         if ~D(i,j)
@@ -51,6 +60,7 @@ for i = 1:n
     end
 end
 
+% Check path consistency
 Y(n+1).R = R;
 while 1
     Y(1) = Y(end);
@@ -72,6 +82,7 @@ while 1
     end
 end
 
+% Put it back to D and return 
 D_revised = zeros(16,3);
 for i = 1:n
     for j = 1:m
