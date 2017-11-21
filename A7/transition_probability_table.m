@@ -1,5 +1,5 @@
 function P = transition_probability_table()
-% transition_probability_table - return destination cell and their...
+% transition_probability_table - return destination cell and their
 %        probabilities
 % On output:
 %       P (nxk struct array): transition model
@@ -21,121 +21,126 @@ function P = transition_probability_table()
 %       UU
 %       Fall 2017
 %
-P = [];
-x = S(1);
-y = S(2);
-neis = BR_Wumpus_neighbors(x,y);
-len_neis = length(neis);
-possible_dirs = [];
-for i = 1:len_neis
-    % neighbors that are below
-    if neis(i,1) == x && neis(i,2) == (y - 1)
-        possible_dirs = [possible_dirs; 0];
-    % neighbors that are above
-    elseif neis(i,1) == x && neis(i,2) == (y + 1)
-        possible_dirs = [possible_dirs; 1];
-    % neighbors that are at left
-    elseif neis(i,2) == y && neis(i,1) == (x - 1)
-        possible_dirs = [possible_dirs; 2];
-    % neighbors that are at right
-    elseif neis(i,2) == y && neis(i,1) == (x + 1)
-        possible_dirs = [possible_dirs; 3];
-    end
-end
+Up = 1;
+Left = 2;
+Down = 3;
+Right = 4;
+for x = 1:4
+    for y = 1:4
+        index = xy_to_index(x,y);
+        neis = BR_Wumpus_neighbors(x,y);
+        len_neis = length(neis);
+        possible_dirs = [];
+        for i = 1:len_neis
+            % neighbors that are above
+            if neis(i,1) == x && neis(i,2) == (y + 1)
+                possible_dirs = [possible_dirs; Up];
+            % neighbors that are at left
+            elseif neis(i,2) == y && neis(i,1) == (x - 1)
+                possible_dirs = [possible_dirs; Left];
+            % neighbors that are below
+            elseif neis(i,1) == x && neis(i,2) == (y - 1)
+                possible_dirs = [possible_dirs; Down];
+            % neighbors that are at right
+            elseif neis(i,2) == y && neis(i,1) == (x + 1)
+                possible_dirs = [possible_dirs; Right];
+            end
+        end
 
-switch action
-    % Action: Up
-    case 1
+        for i = 1:4
+            P(index,i).probs = zeros(16,1);
+        end
+
+        % Action: Up
         % UP
-        if ismember(1,possible_dirs)
-            P = [P; x, y+1, 0.8];
+        if ismember(Up,possible_dirs)
+            sp = xy_to_index(x,y+1);
         else
-            P = [P; x, y, 0.8];
+            sp = xy_to_index(x,y);
         end
+        P(index,Up).probs(sp) = P(index,Up).probs(sp) + 0.8;
         % Left
-        if ismember(2,possible_dirs)
-            P = [P; x-1, y, 0.1];
+        if ismember(Left,possible_dirs)
+            sp = xy_to_index(x-1,y);
         else
-            P = [P; x, y, 0.1];
+            sp = xy_to_index(x,y);
         end
+        P(index,Up).probs(sp) = P(index,Up).probs(sp) + 0.1;
         % Right
-        if ismember(3,possible_dirs)
-            P = [P; x+1, y, 0.1];
+        if ismember(Right,possible_dirs)
+            sp = xy_to_index(x+1,y);
         else
-            P = [P; x, y, 0.1];
+            sp = xy_to_index(x,y);
         end
-        
-    % Action: Left
-    case 2
+        P(index,Up).probs(sp) = P(index,Up).probs(sp) + 0.1;
+
+        % Action: Left
         % Left
-        if ismember(2,possible_dirs)
-            P = [P; x-1, y, 0.8];
+        if ismember(Left,possible_dirs)
+            sp = xy_to_index(x-1,y);
         else
-            P = [P; x, y, 0.8];
+            sp = xy_to_index(x,y);
         end
+        P(index,Left).probs(sp) = P(index,Left).probs(sp) + 0.8;
         % Up
-        if ismember(1,possible_dirs)
-            P = [P; x, y+1, 0.1];
+        if ismember(Up,possible_dirs)
+            sp = xy_to_index(x,y+1);
         else
-            P = [P; x, y, 0.1];
+            sp = xy_to_index(x,y);
         end
+        P(index,Left).probs(sp) = P(index,Left).probs(sp) + 0.1;
         % Down
-        if ismember(0,possible_dirs)
-            P = [P; x, y-1, 0.1];
+        if ismember(Down,possible_dirs)
+            sp = xy_to_index(x,y-1);
         else
-            P = [P; x, y, 0.1];
+            sp = xy_to_index(x,y);
         end
-        
-    % Action: Down
-    case 3
-        % Down
-        if ismember(0,possible_dirs)
-            P = [P; x, y-1, 0.8];
-        else
-            P = [P; x, y, 0.8];
-        end
-        % Left
-        if ismember(2,possible_dirs)
-            P = [P; x-1, y, 0.1];
-        else
-            P = [P; x, y, 0.1];
-        end
-        % Right
-        if ismember(3,possible_dirs)
-            P = [P; x+1, y, 0.1];
-        else
-            P = [P; x, y, 0.1];
-        end
-    % Action: Right
-    case 4
-        % Right
-        if ismember(4,possible_dirs)
-            P = [P; x+1, y, 0.8];
-        else
-            P = [P; x, y, 0.8];
-        end
-        % UP
-        if ismember(1,possible_dirs)
-            P = [P; x, y+1, 0.1];
-        else
-            P = [P; x, y, 0.1];
-        end
-        % Down
-        if ismember(0,possible_dirs)
-            P = [P; x, y-1, 0.1];
-        else
-            P = [P; x, y, 0.1];
-        end
-end
+        P(index,Left).probs(sp) = P(index,Left).probs(sp) + 0.1;
 
-% Combine deplicated cell
-% do it backwards
-len_cell_p = length(P(:,1));
-for i = 0:len_cell_p - 2
-    if (P(len_cell_p - i,1) == P(1,1) &&...
-            P(len_cell_p - i,2) == P(1,2))
-        P(1,3) = P(len_cell_p - i,3) + P(1,3);
-        P(len_cell_p - i,:) = [];
+        % Action: Down
+        % Down
+        if ismember(Down,possible_dirs)
+            sp = xy_to_index(x,y-1);
+        else
+            sp = xy_to_index(x,y);
+        end
+        P(index,Down).probs(sp) = P(index,Down).probs(sp) + 0.8;
+        % Left
+        if ismember(Left,possible_dirs)
+            sp = xy_to_index(x-1,y);
+        else
+            sp = xy_to_index(x,y);
+        end
+        P(index,Down).probs(sp) = P(index,Down).probs(sp) + 0.1;
+        % Right
+        if ismember(Right,possible_dirs)
+            sp = xy_to_index(x+1,y);
+        else
+            sp = xy_to_index(x,y);
+        end
+        P(index,Down).probs(sp) = P(index,Down).probs(sp) + 0.1;
+
+        % Action: Right
+        % Right
+        if ismember(Right,possible_dirs)
+            sp = xy_to_index(x+1,y);
+        else
+            sp = xy_to_index(x,y);
+        end
+        P(index,Right).probs(sp) = P(index,Right).probs(sp) + 0.8;
+        % UP
+        if ismember(Up,possible_dirs)
+            sp = xy_to_index(x,y+1);
+        else
+            sp = xy_to_index(x,y);
+        end
+        P(index,Right).probs(sp) = P(index,Right).probs(sp) + 0.1;
+        % Down
+        if ismember(Down,possible_dirs)
+            sp = xy_to_index(x,y-1);
+        else
+            sp = xy_to_index(x,y);
+        end
+        P(index,Right).probs(sp) = P(index,Right).probs(sp) + 0.1;
     end
 end
-
