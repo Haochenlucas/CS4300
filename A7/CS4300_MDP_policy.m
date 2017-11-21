@@ -17,3 +17,7 @@ function policy = CS4300_MDP_policy(S,A,P,U)
 %       UU
 %       Fall 2017
 %
+
+action_len = length(A);
+
+for 
