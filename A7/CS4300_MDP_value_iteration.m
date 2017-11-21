@@ -39,3 +39,28 @@ eta,max_iter)
 %       UU
 %       Fall 2017
 %
+
+len_S = length(S);
+len_A = length(A);
+U = zeros(1,16);
+U_trace = U;
+delta = 0;
+
+while (delta >= eta(1-gamma)/gamma)
+    U = U_prime;
+    delta = 0;
+    for i = 1:len_S
+        max_P_U = -intmax;
+        for j = 1:len_A
+            YYY = ;
+            if YYY >= max_P_U
+                max_P_U = YYY;
+            end
+        end
+        
+        U_prime(i) = R(i) + gamma * max_P_U;
+        if (U_prime(i) - U(i)) > delta
+            delta = U_prime(i) - U(i);
+        end
+    end
+end

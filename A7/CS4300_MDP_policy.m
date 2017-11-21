@@ -18,14 +18,14 @@ function policy = CS4300_MDP_policy(S,A,P,U)
 %       Fall 2017
 %
 
-action_len = length(A);
-S_len = length(S);
+len_A = length(A);
+len_S = length(S);
 policy = zeros(1,16);
 
-for i = 1:S_len
+for i = 1:len_S
     action = -1;
     U_max = -intmax;
-    for j = 1:action_len
+    for j = 1:len_A
         probs = P(i,j);
         U_matrix = U.*probs;
         U_prime = sum(sum(U_matrix));
