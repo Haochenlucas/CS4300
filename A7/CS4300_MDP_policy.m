@@ -20,19 +20,19 @@ function policy = CS4300_MDP_policy(S,A,P,U)
 
 len_A = length(A);
 len_S = length(S);
-policy = zeros(1,16);
+policy = zeros(16,1);
 
 for i = 1:len_S
     action = -1;
     U_max = -intmax;
     for j = 1:len_A
-        probs = P(i,j);
+        probs = P(i,j).probs;
         U_matrix = U.*probs;
-        U_prime = sum(sum(U_matrix));
+        U_prime = sum(U_matrix);
         if (U_max <= U_prime)
             U_max = U_prime;
             action = j;
         end
     end
-    policy(1,i) = action;
+    policy(i) = action;
 end
