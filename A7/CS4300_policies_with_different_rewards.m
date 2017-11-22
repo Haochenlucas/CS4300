@@ -38,7 +38,7 @@ for i = -2000:2000
     if isNew
         policies(:,:,length(policies(1,1,:))+1) = policy;
         lower_limits = [lower_limits; i];
-        upper_limmits = [upper_limmits; i - 10];
+        upper_limmits = [upper_limmits; i - 1];
     end
 end
 policies_s = string([]);
