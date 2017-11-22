@@ -42,13 +42,13 @@ eta,max_iter)
 
 len_S = length(S);
 len_A = length(A);
-U = zeros(16,1);
-Up = zeros(16,1);
+U = zeros(1,16);
+Up = zeros(1,16);
 U_trace = [U];
 delta = 0;
 iter = 0;
 
-while (delta >= eta*(1-gamma)/gamma || iter < max_iter)
+while 1
     % Up: U'
     U = Up;
     delta = 0;
@@ -68,4 +68,7 @@ while (delta >= eta*(1-gamma)/gamma || iter < max_iter)
     end
     U_trace = [U_trace; Up];
     iter = iter + 1;
+    if (delta < eta*(1-gamma)/gamma) || (iter == max_iter)
+        break;
+    end
 end

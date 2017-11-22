@@ -48,7 +48,7 @@ for x = 1:4
         end
 
         for i = 1:4
-            P(index,i).probs = zeros(16,1);
+            P(index,i).probs = zeros(1,16);
         end
 
         % Action: Up

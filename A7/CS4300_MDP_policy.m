@@ -20,7 +20,7 @@ function policy = CS4300_MDP_policy(S,A,P,U)
 
 len_A = length(A);
 len_S = length(S);
-policy = zeros(16,1);
+policy = zeros(1,16);
 
 for i = 1:len_S
     action = -1;
