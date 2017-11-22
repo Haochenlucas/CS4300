@@ -8,5 +8,4 @@ R(:,3) = -1000*ones(1,4);
 R(1,3) = -1;
 R(1,4) = 1000;
 R = [R(4,:),R(3,:),R(2,:),R(1,:)];
-R = R/1000;
 [U,Ut] = CS4300_MDP_value_iteration(S,A,P,R,gamma,0.1,max_iter);

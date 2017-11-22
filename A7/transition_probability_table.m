@@ -1,6 +1,12 @@
 function P = transition_probability_table()
-% transition_probability_table - return destination cell and their
-%        probabilities
+% transition_probability_table - Create the transition probability table 
+%       for the following board.
+%
+%           0 0 0 2
+%           0 0 1 0
+%           0 0 3 0
+%           0 0 1 0
+%
 % On output:
 %       P (nxk struct array): transition model
 %           (s,a).probs (a vector with n transition probabilities
@@ -49,6 +55,9 @@ for x = 1:4
 
         for i = 1:4
             P(index,i).probs = zeros(1,16);
+        end
+        if (x == 3 && y ~= 4) || (x == 4 && y == 4)
+            continue;
         end
 
         % Action: Up
