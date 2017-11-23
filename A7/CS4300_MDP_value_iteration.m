@@ -2,8 +2,8 @@ function [U,U_trace] = CS4300_MDP_value_iteration(S,A,P,R,gamma,...
 eta,max_iter)
 % CS4300_MDP_value_iteration - compute policy using value iteration
 % On input:
-%       S (vector): states (1 to n)
-%       A (vector): actions (1 to k)
+%       S (vector): states (1 to 16)
+%       A (vector): actions (1 to 4)
 %       P (nxk struct array): transition model
 %         (s,a).probs (a vector with n transition probabilities
 %         (from s to s_prime, given action a)
