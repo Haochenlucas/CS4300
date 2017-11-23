@@ -1,5 +1,5 @@
 function [U,U_trace] = CS4300_MDP_value_iteration(S,A,P,R,gamma,...
-eta,max_iter)
+    eta,max_iter)
 % CS4300_MDP_value_iteration - compute policy using value iteration
 % On input:
 %       S (vector): states (1 to 16)
@@ -16,16 +16,6 @@ eta,max_iter)
 %       U_trace (iterxn): trace of utility values during iteration
 % Call:
 %       [U,Ut] = CS4300_MDP_value_iteration(S,A,P,R,0.999999,0.1,100);
-%
-%       Set up a driver function, CS_4300_run_value_iteration (see
-%       below), which sets up the Markov Decision Problem and calls this
-%       function.
-%
-%       Chapter 17 Russell and Norvig (Table p. 651)
-%       [S,A,R,P,U,Ut] = CS4300_run_value_iteration(0.999999,1000)
-%
-%       U’ = 0.7053 0.6553 0.6114 0.3879 0.7616 0 0.6600 -1.0000
-%       0.8116 0.8678 0.9178 1.0000
 %
 %       Layout:                1
 %          13 14 15 16         ˆ
