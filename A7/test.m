@@ -1,10 +1,7 @@
-policies_s = string([]);
-for i = 1:length(policies(1,1,:))
-    policy = string(policies(:,:,i));
-    policy(policy == "1") = "^";
-    policy(policy == "2") = "<";
-    policy(policy == "3") = "v";
-    policy(policy == "4") = ">";
-    policy(policy == "-1") = "x";
-    policies_s(:,:,i) = policy;
-end
+[~,~,~,~,~,Ut1] = CS4300_run_value_iteration(0.9,1000);
+[~,~,~,~,~,Ut2] = CS4300_run_value_iteration(0.99,1000);
+[~,~,~,~,~,Ut3] = CS4300_run_value_iteration(0.999,1000);
+[~,~,~,~,~,Ut4] = CS4300_run_value_iteration(0.9999,1000);
+[~,~,~,~,~,Ut5] = CS4300_run_value_iteration(0.99999,1000);
+[~,~,~,~,~,Ut6] = CS4300_run_value_iteration(0.999999,1000);
+save("Uts.mat","Ut1","Ut2","Ut3","Ut4","Ut5","Ut6")
