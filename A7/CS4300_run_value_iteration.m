@@ -1,17 +1,17 @@
 function [S,A,R,P,U,Ut] = CS4300_run_value_iteration(gamma,max_iter)
-% CS4300_run_value_iteration - this function is the driver function of...
+% CS4300_run_value_iteration - this function is the driver function of
 %                               the value iteration function
 % On input:
 %       gamma (double): discount value
-%       max_iter (int): maxium iteration
+%       max_iter (int): maximum iteration
 % On output:
 %       [S,A,R,P,U,Ut]:
 %           S (vector): states (1 to 16)
 %           A (vector): actions (1 to 4)
 %           R (vector): state rewards
 %           P (nxk struct array): transition model
-%           (s,a).probs (a vector with n transition probabilities
-%           (from s to s_prime, given action a)
+%               (s,a).probs (a vector with n transition probabilities
+%               (from s to s_prime, given action a)
 %           U (vector): state utilities
 %           U_trace (iterxn): trace of utility values during iteration
 % Call:

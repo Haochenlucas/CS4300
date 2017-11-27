@@ -1,7 +1,7 @@
 function [lower_limits, upper_limmits, policies, policies_s] ...
         = CS4300_policies_with_different_rewards()
-% CS4300_run_value_iteration - this function is the driver function of...
-%                               the value iteration function
+% CS4300_policies_with_different_rewards - Generate policies with different
+%                               reward values of a clear cell
 % On input:
 %
 % On output:
@@ -9,7 +9,7 @@ function [lower_limits, upper_limmits, policies, policies_s] ...
 %           lower_limits(int): the lower bound of reward of clear cells
 %           upper_limmits(int): the upper bound of reward of clear cells
 %           policies(4x4xn int): action chosen for each cell
-%           policies_s(4x4xn string): string representation for policies
+%           policies_s(4x4xn string): string representation of policies
 % Call:
 %       [lower_limits, upper_limmits, policies, policies_s] ...
 %        = CS4300_policies_with_different_rewards()
