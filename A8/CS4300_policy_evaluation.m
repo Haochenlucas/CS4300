@@ -27,7 +27,7 @@ function Up = CS4300_policy_evaluation(S,P,R,U,policy,gamma)
 %     Fall 2017
 % 
 
-Up = zeros(length(S),1);
+Up = [];
 for i = 1:length(S)
-    Up(i) = R(i) + gamma * sum(P(i,policy(i)).probs.*U);
+    Up = [Up ;R(i) + gamma * sum(P(i,policy(i)).probs.*U)];
 end
