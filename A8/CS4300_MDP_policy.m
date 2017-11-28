@@ -26,9 +26,7 @@ max_U = -int32(ones(len_S,1)) * intmax;
 
 for i = 1:len_S
     for j = 1:len_A
-        probs = P(i,j).probs;
-        U_matrix = U.*probs;
-        U_prime = sum(U_matrix);
+        U_prime = sum(P(i,j).probs.*U);
         if (max_U(i) <= U_prime)
             max_U(i) = U_prime;
             policy(i) = j;
