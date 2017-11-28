@@ -36,7 +36,7 @@ for i = -2000:2000
 
     [p,Up,Tpt] = CS4300_MDP_policy_iteration(S,A,P,R,10000,0.999);
     policy = [p(13:16),p(9:12),p(5:8),p(1:4)].';
-    policy(1,4) = -1;
+    policy(1,4) = -2;
     policy(2,3) = -1;
     policy(3,3) = -1;
     policy(4,3) = -1;
@@ -66,5 +66,6 @@ for i = 1:length(policies(1,1,:))
     policy(policy == "3") = "v";
     policy(policy == "4") = ">";
     policy(policy == "-1") = "x";
+    policy(policy == "-2") = "G";
     policies_s(:,:,i) = policy;
 end

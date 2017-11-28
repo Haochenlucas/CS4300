@@ -21,24 +21,28 @@ function [policy,U,Ut] = CS4300_MDP_policy_iteration(S,A,P,R,k,gamma)
 %     1  2  3  4        |
 %                       V
 %                       3
-%     [S,A,R,P,U,Ut] = CS4300_run_value_iteration(0.999999,1000);
+%     [S,A,R,P] = CS4300_MDP_policy_iteration_args();
 %     [p,Up,Tpt] = CS4300_MDP_policy_iteration(S,A,P,R,10,0.999)
 %     p’
 % 
 % p =
 % 
-%     1         corrresponds to:
-%     2
-%     2                 -> -> ->  X
-%     2                 ˆ  X   ˆ  X
-%     1                 ˆ  <- <- <-
-%     1
-%     1
-%     1
-%     4
-%     4
-%     4
-%     1
+%      1         corrresponds to:
+%      2                >    >    ^    G
+%      2                ^    <    x    >
+%      4                ^    <    x    >
+%      1                ^    <    x    >
+%      2
+%      2
+%      4
+%      1
+%      2
+%      2
+%      4
+%      4
+%      4
+%      1
+%      4
 % 
 % Author:
 %     Haochen Zhang & Tim Wei
