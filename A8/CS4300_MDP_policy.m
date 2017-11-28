@@ -1,4 +1,4 @@
-function policy = CS4300_MDP_policy(S,A,P,U)
+function [policy,max_U] = CS4300_MDP_policy(S,A,P,U)
 % CS4300_MDP_policy - generate a policy from utilities
 % See p. 648 Russell & Norvig
 % On input:
@@ -10,6 +10,7 @@ function policy = CS4300_MDP_policy(S,A,P,U)
 %       U (vector): state utilities
 % On output:
 %       policy (vector): actions per state
+%       max_U (vector): the expected utilities calculated by policy
 % Call:
 %       p = CS4300_MDP_policy(S,A,P,U);
 % Author:
@@ -20,19 +21,17 @@ function policy = CS4300_MDP_policy(S,A,P,U)
 
 len_A = length(A);
 len_S = length(S);
-policy = zeros(1,16);
+policy = zeros(len_S,1);
+max_U = -int32(ones(len_S,1)) * intmax;
 
 for i = 1:len_S
-    action = -1;
-    U_max = -intmax;
     for j = 1:len_A
         probs = P(i,j).probs;
         U_matrix = U.*probs;
         U_prime = sum(U_matrix);
-        if (U_max <= U_prime)
-            U_max = U_prime;
-            action = j;
+        if (max_U(i) <= U_prime)
+            max_U(i) = U_prime;
+            policy(i) = j;
         end
     end
-    policy(i) = action;
 end

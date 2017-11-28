@@ -45,3 +45,25 @@ function [policy,U,Ut] = CS4300_MDP_policy_iteration(S,A,P,R,k,gamma)
 %     UU
 %     Fall 2017
 % 
+
+policy = randi(length(A),length(S),1);
+U = zeros(length(S),1);
+Ut = [U];
+
+for i = 1:k
+    U = CS4300_policy_evaluation(S,P,R,U,policy,gamma);
+    Ut = [Ut,U];
+    unchanged = 1;
+    [temp_policy,max_U] = CS4300_MDP_policy(S,A,P,U);
+    for j = S
+        if max_U(j) > sum(P(j,policy(j)).probs.*U)
+            if policy(j) ~= temp_policy(j)
+                policy(j) = temp_policy(j);
+                unchanged = 0;
+            end
+        end
+    end
+    if unchanged
+        break;
+    end
+end

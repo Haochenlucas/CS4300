@@ -20,8 +20,7 @@ function P = transition_probability_table()
 %                              V
 %                              3
 % Call:
-%       cell = [1,1];
-%       cell_p = transition_probability_table(cell, 1);
+%       P = transition_probability_table();
 % Author:
 %       Haochen Zhang & Tim Wei
 %       UU
@@ -54,7 +53,7 @@ for x = 1:4
         end
 
         for i = 1:4
-            P(index,i).probs = zeros(1,16);
+            P(index,i).probs = zeros(16,1);
         end
         if (x == 3 && y ~= 4) || (x == 4 && y == 4)
             continue;
