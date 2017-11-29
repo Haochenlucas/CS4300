@@ -32,8 +32,8 @@ function [U,U_trace] = CS4300_MDP_value_iteration(S,A,P,R,gamma,...
 
 len_S = length(S);
 len_A = length(A);
-U = zeros(1,16);
-Up = zeros(1,16);
+U = zeros(1,len_S);
+Up = zeros(1,len_S);
 U_trace = [U];
 delta = 0;
 iter = 0;
