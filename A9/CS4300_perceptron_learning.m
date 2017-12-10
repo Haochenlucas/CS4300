@@ -23,24 +23,26 @@ n = length(X(:,1));
 m = length(X(1,:));
 w = 0.02 * rand(m+1,1) - 0.01;
 iter = 0;
+counter = 1;
+per_cor = [];
+X = [ones(n,1) X];
 % Run for x epoches
 for i = 1: max_iter
-    % shuffle the data sets
-    X = X(randperm(end), :);
-    
     for j = 1 : n
         y_ = y(j);
-        x_ = [1  X(j,:)];
-        if y_ * (w * x_) <= 0
+        x_ = X(j,:);
+        if y_ * (x_ * w) <= 0
             if rate
                 alpha = 1000/(1000 + iter);
             end
             
             h = 0;
-            if (w * x_) >= 0
+            if (x_ * w) >= 0
                 h = 1;
             end
             w = w + ((alpha * (y_ - h)) * x_)';
+            per_cor(counter) = sum(((X * w) >= 0) == y')/27;
+            counter = counter + 1;
         end
         
         iter = iter + 1;
