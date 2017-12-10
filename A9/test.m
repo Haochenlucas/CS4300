@@ -13,8 +13,6 @@ for i = 1: 3
                 im = im>50;
                 g_train(j,:) = im(:);
             end
-            temp = ones(9,1);
-            g_train = [temp g_train];
         case 2
             for j = 1:9
                 im = imread(strcat('p', char(j+'0'), '.jpg'));
@@ -22,8 +20,6 @@ for i = 1: 3
                 im = im>50;
                 p_train(j,:) = im(:);
             end
-            temp = ones(9,1);
-            p_train = [temp p_train];
         case 3
             for j = 1:9
                 im = imread(strcat('w', char(j+'0'), '.jpg'));
@@ -31,8 +27,6 @@ for i = 1: 3
                 im = im>50;
                 w_train(j,:) = im(:);
             end
-            temp = ones(9,1);
-            w_train = [temp w_train];
     end
 end
 
