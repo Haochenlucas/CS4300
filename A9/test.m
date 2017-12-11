@@ -1,57 +1,36 @@
-clear;
-load('G.mat');
-load('P.mat');
-load('W.mat');
-
-% parse .jpg
-for i = 1: 3
-    switch i
-        case 1
-            for j = 1:9
-                im = imread(strcat('g', char(j+'0'), '.jpg'));
-                im = imresize(im,[15,15]);
-                im = im>50;
-                X(j,:) = im(:,8);
-            end
-        case 2
-            for j = 1:9
-                im = imread(strcat('p', char(j+'0'), '.jpg'));
-                im = imresize(im,[15,15]);
-                im = im>50;
-                X(j+9,:) = im(:,8);
-            end
-        case 3
-            for j = 1:9
-                im = imread(strcat('w', char(j+'0'), '.jpg'));
-                im = imresize(im,[15,15]);
-                im = im>50;
-                X(j+18,:) = im(:,8);
-            end
-    end
-end
-
-y(1:9)=1;
-y(10:18)= 2;
-y(19:27)=3;
-y = y';
-
-% % G.mat parser
-% for i = 1:9
-%     G(i).im = imresize(G(i).im,[15,15]);
-%     G(i).im = G(i).im>50;
-%     G_train(i,:) = G(i).im(:);
-% end
-% 
-% % P.mat parser
-% for i = 1:9
-%     P(i,1).im = imresize(P(i,1).im,[15,15]);
-%     P(i,1).im = P(i,1).im>50;
-%     P_train(i,:) = P(i,1).im(:);
-% end
-% 
-% % W.mat parser
-% for i = 1:9
-%     G(i).im = imresize(G(i).im,[15,15]);
-%     G(i).im = G(i).im>50;
-%     G_train(i,:) = G(i).im(:);
-% end
+GPL_mean = mean(GPL)
+GPL_var = var(GPL)
+GPL_ci = 1.96 * sqrt(GPL_var) / sqrt(1000)
+GLL_mean = mean(GLL)
+GLL_var = var(GLL)
+GLL_ci = 1.96 * sqrt(GLL_var) / sqrt(1000)
+GPLa_mean = mean(GPLa)
+GPLa_var = var(GPLa)
+GPLa_ci = 1.96 * sqrt(GPLa_var) / sqrt(1000)
+GLLa_mean = mean(GLLa)
+GLLa_var = var(GLLa)
+GLLa_ci = 1.96 * sqrt(GLLa_var) / sqrt(1000)
+PPL_mean = mean(PPL)
+PPL_var = var(PPL)
+PPL_ci = 1.96 * sqrt(PPL_var) / sqrt(1000)
+PLL_mean = mean(PLL)
+PLL_var = var(PLL)
+PLL_ci = 1.96 * sqrt(PLL_var) / sqrt(1000)
+PPLa_mean = mean(PPLa)
+PPLa_var = var(PPLa)
+PPLa_ci = 1.96 * sqrt(PPLa_var) / sqrt(1000)
+PLLa_mean = mean(PLLa)
+PLLa_var = var(PLLa)
+PLLa_ci = 1.96 * sqrt(PLLa_var) / sqrt(1000)
+WPL_mean = mean(WPL)
+WPL_var = var(WPL)
+WPL_ci = 1.96 * sqrt(WPL_var) / sqrt(1000)
+WLL_mean = mean(WLL)
+WLL_var = var(WLL)
+WLL_ci = 1.96 * sqrt(WLL_var) / sqrt(1000)
+WPLa_mean = mean(WPLa)
+WPLa_var = var(WPLa)
+WPLa_ci = 1.96 * sqrt(WPLa_var) / sqrt(1000)
+WLLa_mean = mean(WLLa)
+WLLa_var = var(WLLa)
+WLLa_ci = 1.96 * sqrt(WLLa_var) / sqrt(1000)
