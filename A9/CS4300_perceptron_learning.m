@@ -31,16 +31,16 @@ for i = 1: max_iter
     j = randi(n);
     y_ = y(j);
     x_ = X(j,:);
-    if y_ * (x_ * w) <= 0
+%     if y_ * (x_ * w) <= 0
         if rate
             alpha = 1000/(1000 + iter);
         end
 
         h = (x_ * w) >= 0;
         w = w + ((alpha * (y_ - h)) * x_)';
-        per_cor(counter) = sum(((X * w) >= 0) == y)/n;
+        per_cor(counter) = sum(((X * w) > 0) == y)/n;
         counter = counter + 1;
-    end
+%     end
 
     iter = iter + 1;
 end

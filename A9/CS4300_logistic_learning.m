@@ -33,21 +33,19 @@ for i = 1: max_iter
     j = randi(n);
     y_ = y(j);
     x_ = X(j,:);
-    if y_ * (x_ * w) <= 0
-        if rate
-            alpha = 1000/(1000 + iter);
-        end
-
-        h = 1/(1 + exp(-x_ * w));
-
-        w = w + (alpha * (y_ - h) * h * (1 - h)) * x_';
-        per_cor(counter) = sum(((X * w) >= 0) == y)/n;
-
-        err = y - (1./(1 + exp(-X * w)));
-        Se(counter) = sum(err .* err)/n;
-
-        counter = counter + 1;
+    if rate
+        alpha = 1000/(1000 + iter);
     end
+
+    h = 1/(1 + exp(-x_ * w));
+
+    w = w + (alpha * (y_ - h) * h * (1 - h)) * x_';
+    per_cor(counter) = sum(((X * w) > 0) == y)/n;
+
+    err = y - (1./(1 + exp(-X * w)));
+    Se(counter) = sum(err .* err)/n;
+
+    counter = counter + 1;
 
     iter = iter + 1;
 end
