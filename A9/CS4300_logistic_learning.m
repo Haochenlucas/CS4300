@@ -20,28 +20,34 @@ function [w,per_cor,Se] = CS4300_logistic_learning(X,y,alpha,max_iter,rate)
 %
 
 % Initialize w
-w = 0.02 * rand(1,225+1) - 0.01;
+n = length(X(:,1));
+m = length(X(1,:));
+w = 0.02 * rand(m+1,1) - 0.01;
 iter = 0;
+counter = 1;
+per_cor = [];
+Se = [];
+X = [ones(n,1) X];
 % Run for x epoches
 for i = 1: max_iter
-    % shuffle the data sets
-    data = data(randperm(end), :);
-    
-    for j = 1 : length(data)
-        y_ = y(j);
-        x_ = X(j,:);
-        if y_ * (w * x_' + b) <= 0
-            if rate
-                alpha = alpha * 1000/(1000 + iter);
-            end
-            
-            h = 1/(1 + exp(-w * x_));
-            if (w * x_) >= 0
-                h = 1;
-            end
-            w = w + (alpha * (y_ - h) * h * (1 - h)) * x_;
+    j = randi(n);
+    y_ = y(j);
+    x_ = X(j,:);
+    if y_ * (x_ * w) <= 0
+        if rate
+            alpha = 1000/(1000 + iter);
         end
-        
-        iter = iter + 1;
+
+        h = 1/(1 + exp(-x_ * w));
+
+        w = w + (alpha * (y_ - h) * h * (1 - h)) * x_';
+        per_cor(counter) = sum(((X * w) >= 0) == y)/n;
+
+        err = y - (1./(1 + exp(-X * w)));
+        Se(counter) = sum(err .* err)/n;
+
+        counter = counter + 1;
     end
+
+    iter = iter + 1;
 end

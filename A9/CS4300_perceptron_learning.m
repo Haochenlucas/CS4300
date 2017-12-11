@@ -28,23 +28,19 @@ per_cor = [];
 X = [ones(n,1) X];
 % Run for x epoches
 for i = 1: max_iter
-    for j = 1 : n
-        y_ = y(j);
-        x_ = X(j,:);
-        if y_ * (x_ * w) <= 0
-            if rate
-                alpha = 1000/(1000 + iter);
-            end
-            
-            h = 0;
-            if (x_ * w) >= 0
-                h = 1;
-            end
-            w = w + ((alpha * (y_ - h)) * x_)';
-            per_cor(counter) = sum(((X * w) >= 0) == y')/27;
-            counter = counter + 1;
+    j = randi(n);
+    y_ = y(j);
+    x_ = X(j,:);
+    if y_ * (x_ * w) <= 0
+        if rate
+            alpha = 1000/(1000 + iter);
         end
-        
-        iter = iter + 1;
+
+        h = (x_ * w) >= 0;
+        w = w + ((alpha * (y_ - h)) * x_)';
+        per_cor(counter) = sum(((X * w) >= 0) == y)/n;
+        counter = counter + 1;
     end
+
+    iter = iter + 1;
 end
